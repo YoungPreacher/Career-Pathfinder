@@ -18,10 +18,12 @@ import {
   Radio,
   Slider,
 } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 const steps = ['Basic Information', 'Skills & Experience', 'Interests & Preferences', 'Work Environment'];
 
-function Assessment() {
+function Assessment({ setRecommendations }) {
+  const navigate = useNavigate();
   const [activeStep, setActiveStep] = useState(0);
   const [skills, setSkills] = useState([]);
   const [newSkill, setNewSkill] = useState('');
@@ -31,7 +33,7 @@ function Assessment() {
     interests: [],
     workStyle: '',
     workEnvironment: '',
-    salaryExpectation: [50000, 100000],
+    salaryExpectation: [500, 50000],
     workLifeBalance: 3,
   });
 
@@ -52,6 +54,18 @@ function Assessment() {
 
   const handleSkillDelete = (skillToDelete) => {
     setSkills(skills.filter((skill) => skill !== skillToDelete));
+  };
+
+  const handleSubmit = async () => {
+    // Collect assessment data into `formData`
+    const response = await fetch('http://localhost:5000/api/recommend', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(formData)
+    });
+    const data = await response.json();
+    setRecommendations(data);
+    navigate('/results');
   };
 
   const getStepContent = (step) => {
@@ -79,7 +93,7 @@ function Assessment() {
                 native: true,
               }}
             >
-              <option value="">Select Education Level</option>
+              {/* <option value="">Select Education Level</option> */}
               <option value="high-school">High School</option>
               <option value="bachelors">Bachelor's Degree</option>
               <option value="masters">Master's Degree</option>
@@ -120,15 +134,19 @@ function Assessment() {
 
       case 2:
         return (
-          <Box sx={{ mt: 2 }}>
-            <Typography gutterBottom>How much do you enjoy problem-solving?</Typography>
-            <Rating
-              name="problem-solving"
-              defaultValue={3}
-              size="large"
-              sx={{ mb: 3 }}
-            />
+          <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 4, mt: 2 }}>
+            {/* Problem-solving section */}
+            <Box>
+              <Typography gutterBottom>How much do you enjoy problem-solving?</Typography>
+              <Rating
+                name="problem-solving"
+                defaultValue={3}
+                size="large"
+                sx={{ mb: 3 }}
+              />
+            </Box>
 
+            {/* Preferred Work Style section */}
             <FormControl component="fieldset" sx={{ mb: 3 }}>
               <FormLabel component="legend">Preferred Work Style</FormLabel>
               <RadioGroup defaultValue="balanced">
@@ -150,19 +168,22 @@ function Assessment() {
               </RadioGroup>
             </FormControl>
 
-            <Typography gutterBottom>Desired Salary Range</Typography>
-            <Slider
-              value={formData.salaryExpectation}
-              onChange={(_, newValue) =>
-                setFormData({ ...formData, salaryExpectation: newValue })
-              }
-              valueLabelDisplay="auto"
-              min={30000}
-              max={200000}
-              step={5000}
-              marks
-              sx={{ mb: 3 }}
-            />
+            {/* Salary Range section */}
+            <Box>
+              <Typography gutterBottom>Desired Salary Range</Typography>
+              <Slider
+                value={formData.salaryExpectation}
+                onChange={(_, newValue) =>
+                  setFormData({ ...formData, salaryExpectation: newValue })
+                }
+                valueLabelDisplay="auto"
+                min={500}
+                max={200000}
+                step={500}
+                marks
+                sx={{ mb: 3 }}
+              />
+            </Box>
           </Box>
         );
 
@@ -235,10 +256,10 @@ function Assessment() {
             </Typography>
             <Button
               variant="contained"
-              onClick={() => setActiveStep(0)}
+              onClick={handleSubmit}
               sx={{ mt: 2 }}
             >
-              Start Over
+              Finish Assessment
             </Button>
           </Box>
         ) : (

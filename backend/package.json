@@ -1,0 +1,14 @@
+{
+  "name": "career-pathfinder-backend",
+  "version": "1.0.0",
+  "description": "Flask backend for Career Pathfinder web application",
+  "main": "app.py",
+  "scripts": {
+    "start": "python app.py",
+    "dev": "python app.py",
+    "install-deps": "pip install -r requirements.txt"
+  },
+  "keywords": ["flask", "career", "recommendations", "api"],
+  "author": "Career Pathfinder Team",
+  "license": "MIT"
+} 

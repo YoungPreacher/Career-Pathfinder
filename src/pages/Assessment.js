@@ -63,17 +63,41 @@ function Assessment({ setRecommendations }) {
   };
 
   const handleSubmit = async () => {
-    // For now, we'll use mock data since we don't have a backend
-    // In a real app, you would send the formData to your backend
-    const mockRecommendations = [
-      'Software Engineer',
-      'Data Scientist', 
-      'Product Manager',
-      'UX Designer',
-      'Marketing Manager'
-    ];
-    setRecommendations(mockRecommendations);
-    navigate('/results');
+    try {
+      // Send assessment data to backend
+      const response = await fetch('http://localhost:5000/api/recommend', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to get recommendations');
+      }
+      
+      const data = await response.json();
+      
+      if (data.success && data.recommendations) {
+        // Extract career names from recommendations
+        const careerNames = data.recommendations.map(rec => rec.career_name);
+        setRecommendations(careerNames);
+        navigate('/results');
+      } else {
+        throw new Error('Invalid response from server');
+      }
+    } catch (error) {
+      console.error('Error getting recommendations:', error);
+      // Fallback to mock data if backend is not available
+      const mockRecommendations = [
+        'Software Engineer',
+        'Data Scientist', 
+        'Product Manager',
+        'UX Designer',
+        'Marketing Manager'
+      ];
+      setRecommendations(mockRecommendations);
+      navigate('/results');
+    }
   };
 
   const getStepContent = (step) => {

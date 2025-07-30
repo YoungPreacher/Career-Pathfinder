@@ -38,8 +38,8 @@ import {
 } from '@mui/icons-material';
 import { useNavigate, useLocation } from 'react-router-dom';
 
-// Mock career data - in a real app, this would come from your backend
-const careerData = {
+// Career data - will be fetched from backend
+let careerData = {
   'Software Engineer': {
     description: 'Develop software applications and systems using programming languages and development tools.',
     salary: {
@@ -137,25 +137,40 @@ function Results({ recommendations = [] }) {
   const location = useLocation();
   const [selectedCareers, setSelectedCareers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [careerDataState, setCareerDataState] = useState({});
 
   useEffect(() => {
-    // If we have recommendations from props, use them; otherwise use mock data
-    if (recommendations.length > 0) {
-      setLoading(false);
-    } else {
-      // Simulate loading recommendations
-      setTimeout(() => {
-        const mockRecommendations = [
-          'Software Engineer',
-          'Data Scientist',
-          'Product Manager',
-          'UX Designer',
-          'Marketing Manager'
-        ];
+    const fetchCareerData = async () => {
+      try {
+        // Try to fetch career data from backend
+        const response = await fetch('http://localhost:5000/api/careers');
+        if (response.ok) {
+          const data = await response.json();
+          // Fetch detailed data for each career
+          const detailedData = {};
+          for (const career of data.careers) {
+            const careerResponse = await fetch(`http://localhost:5000/api/career/${encodeURIComponent(career)}`);
+            if (careerResponse.ok) {
+              const careerData = await careerResponse.json();
+              detailedData[career] = careerData.career;
+            }
+          }
+          setCareerDataState(detailedData);
+        } else {
+          // Fallback to local data if backend is not available
+          setCareerDataState(careerData);
+        }
+      } catch (error) {
+        console.error('Error fetching career data:', error);
+        // Fallback to local data
+        setCareerDataState(careerData);
+      } finally {
         setLoading(false);
-      }, 2000);
-    }
-  }, [recommendations]);
+      }
+    };
+
+    fetchCareerData();
+  }, []);
 
   const handleCareerSelect = (career) => {
     if (selectedCareers.includes(career)) {
@@ -231,7 +246,7 @@ function Results({ recommendations = [] }) {
           'UX Designer',
           'Marketing Manager'
         ]).map((career) => {
-          const data = careerData[career];
+          const data = careerDataState[career] || careerData[career];
           const isSelected = selectedCareers.includes(career);
           
           return (
@@ -318,7 +333,7 @@ function Results({ recommendations = [] }) {
               </TableHead>
               <TableBody>
                 {selectedCareers.map((career) => {
-                  const data = careerData[career];
+                  const data = careerDataState[career] || careerData[career];
                   return (
                     <TableRow key={career}>
                       <TableCell component="th" scope="row">
@@ -364,7 +379,7 @@ function Results({ recommendations = [] }) {
           {/* Detailed Comparison */}
           <Grid container spacing={3}>
             {selectedCareers.map((career) => {
-              const data = careerData[career];
+              const data = careerDataState[career] || careerData[career];
               return (
                 <Grid item xs={12} md={6} key={career}>
                   <Card>

@@ -28,11 +28,13 @@ function Assessment({ setRecommendations }) {
   const [skills, setSkills] = useState([]);
   const [newSkill, setNewSkill] = useState('');
   const [formData, setFormData] = useState({
-    workExperience: '',
+    currentJobTitle: '',
+    yearsExperience: '',
     education: '',
-    interests: [],
-    workStyle: '',
-    workEnvironment: '',
+    skills: [],
+    problemSolving: 3,
+    workStyle: 'balanced',
+    workEnvironment: 'hybrid',
     salaryExpectation: [500, 50000],
     workLifeBalance: 3,
   });
@@ -47,24 +49,30 @@ function Assessment({ setRecommendations }) {
 
   const handleSkillAdd = () => {
     if (newSkill && !skills.includes(newSkill)) {
-      setSkills([...skills, newSkill]);
+      const updatedSkills = [...skills, newSkill];
+      setSkills(updatedSkills);
+      setFormData({ ...formData, skills: updatedSkills });
       setNewSkill('');
     }
   };
 
   const handleSkillDelete = (skillToDelete) => {
-    setSkills(skills.filter((skill) => skill !== skillToDelete));
+    const updatedSkills = skills.filter((skill) => skill !== skillToDelete);
+    setSkills(updatedSkills);
+    setFormData({ ...formData, skills: updatedSkills });
   };
 
   const handleSubmit = async () => {
-    // Collect assessment data into `formData`
-    const response = await fetch('http://localhost:5000/api/recommend', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(formData)
-    });
-    const data = await response.json();
-    setRecommendations(data);
+    // For now, we'll use mock data since we don't have a backend
+    // In a real app, you would send the formData to your backend
+    const mockRecommendations = [
+      'Software Engineer',
+      'Data Scientist', 
+      'Product Manager',
+      'UX Designer',
+      'Marketing Manager'
+    ];
+    setRecommendations(mockRecommendations);
     navigate('/results');
   };
 
@@ -77,23 +85,29 @@ function Assessment({ setRecommendations }) {
               fullWidth
               label="Current Job Title"
               margin="normal"
+              value={formData.currentJobTitle || ''}
+              onChange={(e) => setFormData({ ...formData, currentJobTitle: e.target.value })}
             />
             <TextField
               fullWidth
               label="Years of Experience"
               type="number"
               margin="normal"
+              value={formData.yearsExperience || ''}
+              onChange={(e) => setFormData({ ...formData, yearsExperience: e.target.value })}
             />
             <TextField
               fullWidth
               label="Education Level"
               select
               margin="normal"
+              value={formData.education || ''}
+              onChange={(e) => setFormData({ ...formData, education: e.target.value })}
               SelectProps={{
                 native: true,
               }}
             >
-              {/* <option value="">Select Education Level</option> */}
+              <option value="">Select Education Level</option>
               <option value="high-school">High School</option>
               <option value="bachelors">Bachelor's Degree</option>
               <option value="masters">Master's Degree</option>
@@ -140,7 +154,10 @@ function Assessment({ setRecommendations }) {
               <Typography gutterBottom>How much do you enjoy problem-solving?</Typography>
               <Rating
                 name="problem-solving"
-                defaultValue={3}
+                value={formData.problemSolving || 3}
+                onChange={(_, newValue) =>
+                  setFormData({ ...formData, problemSolving: newValue || 0 })
+                }
                 size="large"
                 sx={{ mb: 3 }}
               />
@@ -149,7 +166,10 @@ function Assessment({ setRecommendations }) {
             {/* Preferred Work Style section */}
             <FormControl component="fieldset" sx={{ mb: 3 }}>
               <FormLabel component="legend">Preferred Work Style</FormLabel>
-              <RadioGroup defaultValue="balanced">
+              <RadioGroup 
+                value={formData.workStyle || 'balanced'}
+                onChange={(e) => setFormData({ ...formData, workStyle: e.target.value })}
+              >
                 <FormControlLabel
                   value="independent"
                   control={<Radio />}
@@ -192,7 +212,10 @@ function Assessment({ setRecommendations }) {
           <Box sx={{ mt: 2 }}>
             <FormControl component="fieldset" sx={{ mb: 3 }}>
               <FormLabel component="legend">Preferred Work Environment</FormLabel>
-              <RadioGroup defaultValue="hybrid">
+              <RadioGroup 
+                value={formData.workEnvironment || 'hybrid'}
+                onChange={(e) => setFormData({ ...formData, workEnvironment: e.target.value })}
+              >
                 <FormControlLabel
                   value="remote"
                   control={<Radio />}

@@ -1,5 +1,5 @@
 body {
-  background-image: url('c:/Users/USER/Downloads/blue-stationery-table.jpg');
+  background-image: url('./assets/blue-stationery-table.jpg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;

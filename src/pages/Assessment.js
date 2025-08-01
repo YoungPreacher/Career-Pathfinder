@@ -18,6 +18,8 @@ import {
   Radio,
   Slider,
 } from '@mui/material';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
 import { useNavigate } from 'react-router-dom';
 
 const steps = ['Basic Information', 'Skills & Experience', 'Interests & Preferences', 'Work Environment'];
@@ -123,19 +125,16 @@ function Assessment({ setRecommendations }) {
             <TextField
               fullWidth
               label="Education Level"
-              select
               margin="normal"
               value={formData.education || ''}
               onChange={(e) => setFormData({ ...formData, education: e.target.value })}
-              SelectProps={{
-                native: true,
-              }}
+              select
             >
-              <option value="">Select Education Level</option>
-              <option value="high-school">High School</option>
-              <option value="bachelors">Bachelor's Degree</option>
-              <option value="masters">Master's Degree</option>
-              <option value="phd">Ph.D.</option>
+              <MenuItem value="high-school">High School</MenuItem>
+              <MenuItem value="diploma">Diploma</MenuItem>
+              <MenuItem value="bachelors">Bachelor's Degree</MenuItem>
+              <MenuItem value="masters">Master's Degree</MenuItem>
+              <MenuItem value="phd">Ph.D.</MenuItem>
             </TextField>
           </Box>
         );

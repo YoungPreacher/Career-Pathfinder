@@ -8,6 +8,7 @@ import Signup from './pages/Signup';
 import Dashboard from './pages/Dashboard';
 import Assessment from './pages/Assessment';
 import Results from './pages/Results';
+import './App.css';
 
 function App() {
   const [recommendations, setRecommendations] = useState([]);

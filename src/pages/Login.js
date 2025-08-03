@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import {
   Container,
   Box,
@@ -17,6 +17,8 @@ import {
   Email,
   Lock,
 } from '@mui/icons-material';
+import { auth } from '../firebase';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 
 function Login() {
   const [showPassword, setShowPassword] = useState(false);
@@ -24,6 +26,8 @@ function Login() {
     email: '',
     password: '',
   });
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -33,10 +37,15 @@ function Login() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle login logic here
-    console.log('Login attempt:', formData);
+    setError('');
+    try {
+      await signInWithEmailAndPassword(auth, formData.email, formData.password);
+      navigate('/dashboard'); // Redirect to dashboard
+    } catch (err) {
+      setError(err.message); // Show error to user
+    }
   };
 
   return (
@@ -116,6 +125,12 @@ function Login() {
                 ),
               }}
             />
+            
+            {error && (
+              <Typography color="error" variant="body2" sx={{ mt: 1, textAlign: 'center' }}>
+                {error}
+              </Typography>
+            )}
             
             <Button
               type="submit"

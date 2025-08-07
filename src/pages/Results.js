@@ -23,7 +23,14 @@ import {
   AccordionDetails,
   IconButton,
   Tooltip,
+  CircularProgress,
+  useTheme,
+  alpha,
+  Avatar,
+  Fade,
+  Zoom,
 } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import {
   TrendingUp,
   School,
@@ -35,6 +42,15 @@ import {
   Star,
   Business,
   Psychology,
+  CheckCircle,
+  ArrowBack,
+  SaveAlt,
+  Refresh,
+  EmojiEvents,
+  WorkOutline,
+  BarChart,
+  ThumbUp,
+  ThumbDown,
 } from '@mui/icons-material';
 import { useNavigate, useLocation } from 'react-router-dom';
 
@@ -196,116 +212,421 @@ function Results({ recommendations = [] }) {
     return '#ff9800';
   };
 
+  // Custom styled components
+  const StyledRating = styled(Rating)(({ theme }) => ({
+    '& .MuiRating-iconFilled': {
+      color: theme.palette.primary.main,
+    },
+  }));
+  
+  const StyledTableCell = styled(TableCell)(({ theme }) => ({
+    borderBottom: `1px solid ${alpha(theme.palette.primary.main, 0.1)}`,
+    padding: theme.spacing(2),
+  }));
+  
+  const StyledTableHead = styled(TableHead)(({ theme }) => ({
+    backgroundColor: alpha(theme.palette.primary.main, 0.05),
+    '& .MuiTableCell-head': {
+      color: theme.palette.primary.dark,
+      fontWeight: 600,
+      borderBottom: `2px solid ${alpha(theme.palette.primary.main, 0.2)}`,
+    },
+  }));
+  
+  const StyledAccordion = styled(Accordion)(({ theme }) => ({
+    border: `1px solid ${alpha(theme.palette.primary.main, 0.1)}`,
+    borderRadius: '8px !important',
+    boxShadow: 'none',
+    '&:before': {
+      display: 'none',
+    },
+    '&.Mui-expanded': {
+      margin: theme.spacing(1, 0),
+      boxShadow: `0 4px 20px ${alpha(theme.palette.primary.main, 0.1)}`,
+    },
+    marginBottom: theme.spacing(2),
+  }));
+  
+  const StyledAccordionSummary = styled(AccordionSummary)(({ theme }) => ({
+    borderRadius: '8px',
+    '&.Mui-expanded': {
+      borderBottom: `1px solid ${alpha(theme.palette.primary.main, 0.1)}`,
+      borderBottomLeftRadius: 0,
+      borderBottomRightRadius: 0,
+    },
+  }));
+  
+  const theme = useTheme();
+  
   if (loading) {
     return (
-      <Container maxWidth="lg" sx={{ mt: 8 }}>
-        <Box sx={{ textAlign: 'center', py: 4 }}>
-          <Typography variant="h4" gutterBottom>
+      <Container maxWidth="lg" sx={{ mt: { xs: 4, md: 8 } }}>
+        <Box sx={{ 
+          textAlign: 'center', 
+          py: 8,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          minHeight: '60vh'
+        }}>
+          <Box sx={{ position: 'relative', mb: 4 }}>
+            <CircularProgress 
+              size={80} 
+              thickness={4} 
+              sx={{ color: theme.palette.primary.main }}
+            />
+            <Box
+              sx={{
+                top: 0,
+                left: 0,
+                bottom: 0,
+                right: 0,
+                position: 'absolute',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <EmojiEvents sx={{ fontSize: 40, color: theme.palette.primary.dark }} />
+            </Box>
+          </Box>
+          <Typography 
+            variant="h3" 
+            gutterBottom 
+            sx={{ 
+              fontWeight: 700,
+              color: theme.palette.primary.dark,
+              mb: 2
+            }}
+          >
             Analyzing Your Assessment...
           </Typography>
-          <LinearProgress sx={{ mt: 2 }} />
-          <Typography variant="body1" sx={{ mt: 2 }}>
-            Finding the best career matches for you
+          <Typography 
+            variant="h6" 
+            color="text.secondary" 
+            sx={{ 
+              maxWidth: 600,
+              mb: 4,
+              fontWeight: 400
+            }}
+          >
+            Finding the best career matches based on your unique profile
           </Typography>
+          <LinearProgress 
+            sx={{ 
+              mt: 2, 
+              width: '60%', 
+              height: 8, 
+              borderRadius: 4,
+              backgroundColor: alpha(theme.palette.primary.main, 0.1),
+              '& .MuiLinearProgress-bar': {
+                borderRadius: 4,
+              }
+            }} 
+          />
         </Box>
       </Container>
     );
   }
 
   return (
-    <Container maxWidth="lg" sx={{ mt: 8, mb: 4 }}>
+    <Container maxWidth="lg" sx={{ mt: { xs: 4, md: 6 }, mb: 6, px: { xs: 2, sm: 3 } }}>
       {/* Header */}
-      <Box sx={{ textAlign: 'center', mb: 4 }}>
-        <Typography variant="h3" gutterBottom sx={{ fontWeight: 'bold' }}>
+      <Box sx={{ 
+        textAlign: 'center', 
+        mb: 5,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center'
+      }}>
+        <Box 
+          sx={{ 
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: 80,
+            height: 80,
+            borderRadius: '50%',
+            backgroundColor: alpha(theme.palette.success.main, 0.1),
+            mb: 3
+          }}
+        >
+          <EmojiEvents sx={{ fontSize: 40, color: theme.palette.success.main }} />
+        </Box>
+        <Typography 
+          variant="h3" 
+          gutterBottom 
+          sx={{ 
+            fontWeight: 700,
+            color: theme.palette.primary.dark,
+            mb: 2
+          }}
+        >
           Your Career Recommendations
         </Typography>
-        <Typography variant="h6" color="text.secondary" sx={{ mb: 3 }}>
-          Based on your assessment, here are the top career paths that match your profile
+        <Typography 
+          variant="h6" 
+          color="text.secondary" 
+          sx={{ 
+            maxWidth: 700,
+            mb: 4,
+            fontWeight: 400
+          }}
+        >
+          Based on your assessment, we've identified these career paths that align with your skills, 
+          interests, and preferences
         </Typography>
-        <Button
-          variant="outlined"
-          onClick={() => navigate('/assessment')}
-          sx={{ mr: 2 }}
-        >
-          Retake Assessment
-        </Button>
-        <Button
-          variant="contained"
-          onClick={() => navigate('/dashboard')}
-        >
-          Save to Dashboard
-        </Button>
+        <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', justifyContent: 'center' }}>
+          <Button
+            variant="outlined"
+            size="large"
+            startIcon={<Refresh />}
+            onClick={() => navigate('/assessment')}
+            sx={{ 
+              borderRadius: '50px',
+              px: 3,
+              py: 1.2,
+            }}
+          >
+            Retake Assessment
+          </Button>
+          <Button
+            variant="contained"
+            size="large"
+            startIcon={<SaveAlt />}
+            onClick={() => navigate('/dashboard')}
+            sx={{ 
+              borderRadius: '50px',
+              px: 3,
+              py: 1.2,
+              fontWeight: 600,
+              boxShadow: '0 4px 14px rgba(0,0,0,0.12)',
+            }}
+          >
+            Save to Dashboard
+          </Button>
+        </Box>
       </Box>
 
       {/* Career Cards Grid */}
-      <Grid container spacing={3} sx={{ mb: 4 }}>
+      <Typography 
+        variant="h5" 
+        sx={{ 
+          mb: 3, 
+          fontWeight: 600,
+          color: theme.palette.primary.dark,
+          textAlign: 'center'
+        }}
+      >
+        Top Career Matches
+      </Typography>
+      <Typography 
+        variant="body1" 
+        color="text.secondary" 
+        sx={{ 
+          mb: 4, 
+          textAlign: 'center',
+          maxWidth: 800,
+          mx: 'auto'
+        }}
+      >
+        Click on a career card to select it for detailed comparison. You can select up to 3 careers.
+      </Typography>
+      
+      <Grid container spacing={3} sx={{ mb: 5 }}>
         {(recommendations.length > 0 ? recommendations : [
           'Software Engineer',
           'Data Scientist',
           'Product Manager',
           'UX Designer',
           'Marketing Manager'
-        ]).map((career) => {
+        ]).map((career, index) => {
           const data = careerDataState[career] || careerData[career];
           const isSelected = selectedCareers.includes(career);
           
           return (
             <Grid item xs={12} md={6} lg={4} key={career}>
-              <Card 
-                sx={{ 
-                  height: '100%',
-                  cursor: 'pointer',
-                  transition: 'all 0.3s ease',
-                  transform: isSelected ? 'scale(1.02)' : 'scale(1)',
-                  boxShadow: isSelected ? 8 : 2,
-                  border: isSelected ? '2px solid #1976d2' : 'none',
-                }}
-                onClick={() => handleCareerSelect(career)}
-              >
-                <CardContent>
-                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
-                    <Typography variant="h5" component="h2" sx={{ fontWeight: 'bold' }}>
-                      {career}
-                    </Typography>
-                    <Chip 
-                      label={data.demand}
-                      color={data.demand === 'Very High' ? 'error' : data.demand === 'High' ? 'warning' : 'default'}
-                      size="small"
-                    />
-                  </Box>
+              <Zoom in={true} style={{ transitionDelay: `${index * 100}ms` }}>
+                <Card 
+                  sx={{ 
+                    height: '100%',
+                    cursor: 'pointer',
+                    transition: 'all 0.3s ease',
+                    transform: isSelected ? 'scale(1.02)' : 'scale(1)',
+                    boxShadow: isSelected ? 
+                      `0 8px 32px ${alpha(theme.palette.primary.main, 0.25)}` : 
+                      `0 4px 20px ${alpha(theme.palette.primary.main, 0.1)}`,
+                    borderRadius: 3,
+                    overflow: 'hidden',
+                    position: 'relative',
+                    border: isSelected ? 
+                      `2px solid ${theme.palette.primary.main}` : 
+                      `1px solid ${alpha(theme.palette.primary.main, 0.1)}`,
+                    '&:hover': {
+                      boxShadow: `0 8px 32px ${alpha(theme.palette.primary.main, 0.2)}`,
+                    }
+                  }}
+                  onClick={() => handleCareerSelect(career)}
+                >
+                  {isSelected && (
+                    <Box 
+                      sx={{ 
+                        position: 'absolute', 
+                        top: 12, 
+                        right: 12, 
+                        zIndex: 2,
+                        backgroundColor: theme.palette.primary.main,
+                        borderRadius: '50%',
+                        width: 32,
+                        height: 32,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        boxShadow: '0 2px 10px rgba(0,0,0,0.2)'
+                      }}
+                    >
+                      <CheckCircle sx={{ color: 'white', fontSize: 20 }} />
+                    </Box>
+                  )}
                   
-                  <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-                    {data.description}
-                  </Typography>
-
-                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-                    <AttachMoney sx={{ mr: 1, color: getSalaryColor(data.salary.average) }} />
-                    <Typography variant="h6" sx={{ color: getSalaryColor(data.salary.average) }}>
-                      {formatSalary(data.salary.average)} avg
+                  <Box 
+                    sx={{ 
+                      height: 8, 
+                      width: '100%', 
+                      backgroundColor: theme.palette.primary.main,
+                      opacity: isSelected ? 1 : 0.7,
+                    }}
+                  />
+                  
+                  <CardContent sx={{ p: 3 }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
+                      <Typography 
+                        variant="h5" 
+                        component="h2" 
+                        sx={{ 
+                          fontWeight: 600,
+                          color: theme.palette.primary.dark
+                        }}
+                      >
+                        {career}
+                      </Typography>
+                      <Chip 
+                        label={data.demand}
+                        color={data.demand === 'Very High' ? 'error' : data.demand === 'High' ? 'warning' : 'success'}
+                        size="small"
+                        sx={{ 
+                          fontWeight: 500,
+                          borderRadius: '50px',
+                          px: 1
+                        }}
+                      />
+                    </Box>
+                    
+                    <Typography variant="body2" color="text.secondary" sx={{ mb: 3, minHeight: 60 }}>
+                      {data.description}
                     </Typography>
-                  </Box>
 
-                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                    <TrendingUp sx={{ mr: 1, color: '#4caf50' }} />
-                    <Typography variant="body2">
-                      {data.growth}/5 Growth Potential
+                    <Box 
+                      sx={{ 
+                        p: 2, 
+                        mb: 3, 
+                        borderRadius: 2,
+                        backgroundColor: alpha(theme.palette.primary.main, 0.05),
+                        border: `1px solid ${alpha(theme.palette.primary.main, 0.1)}`
+                      }}
+                    >
+                      <Box sx={{ display: 'flex', alignItems: 'center', mb: 1.5 }}>
+                        <Avatar 
+                          sx={{ 
+                            width: 36, 
+                            height: 36, 
+                            backgroundColor: alpha(getSalaryColor(data.salary.average), 0.1),
+                            mr: 1.5
+                          }}
+                        >
+                          <AttachMoney sx={{ color: getSalaryColor(data.salary.average) }} />
+                        </Avatar>
+                        <Box>
+                          <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.75rem' }}>
+                            Average Salary
+                          </Typography>
+                          <Typography variant="h6" sx={{ color: getSalaryColor(data.salary.average), fontWeight: 600 }}>
+                            {formatSalary(data.salary.average)}
+                          </Typography>
+                        </Box>
+                      </Box>
+
+                      <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                        <Avatar 
+                          sx={{ 
+                            width: 36, 
+                            height: 36, 
+                            backgroundColor: alpha(theme.palette.success.main, 0.1),
+                            mr: 1.5
+                          }}
+                        >
+                          <TrendingUp sx={{ color: theme.palette.success.main }} />
+                        </Avatar>
+                        <Box>
+                          <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.75rem' }}>
+                            Growth Potential
+                          </Typography>
+                          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                            <StyledRating value={data.growth} readOnly size="small" precision={0.5} />
+                            <Typography variant="body2" sx={{ ml: 1, fontWeight: 500 }}>
+                              {data.growth}/5
+                            </Typography>
+                          </Box>
+                        </Box>
+                      </Box>
+                    </Box>
+
+                    <Typography variant="subtitle2" sx={{ mb: 1.5, fontWeight: 600 }}>
+                      Key Skills:
                     </Typography>
-                  </Box>
+                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.8, mb: 3 }}>
+                      {data.skills.map((skill) => (
+                        <Chip 
+                          key={skill} 
+                          label={skill} 
+                          size="small" 
+                          sx={{ 
+                            borderRadius: '50px',
+                            backgroundColor: alpha(theme.palette.primary.main, 0.1),
+                            color: theme.palette.primary.dark,
+                            fontWeight: 500,
+                            '&:hover': {
+                              backgroundColor: alpha(theme.palette.primary.main, 0.2),
+                            }
+                          }} 
+                        />
+                      ))}
+                    </Box>
 
-                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5, mb: 2 }}>
-                    {data.skills.slice(0, 3).map((skill) => (
-                      <Chip key={skill} label={skill} size="small" variant="outlined" />
-                    ))}
-                  </Box>
-
-                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <Rating value={data.workLifeBalance} readOnly size="small" />
-                    <Typography variant="caption" color="text.secondary">
-                      Work-Life Balance
-                    </Typography>
-                  </Box>
-                </CardContent>
-              </Card>
+                    <Divider sx={{ mb: 2 }} />
+                    
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                        <WorkOutline sx={{ mr: 1, color: theme.palette.text.secondary, fontSize: 20 }} />
+                        <Typography variant="body2" color="text.secondary">
+                          {data.workEnvironment}
+                        </Typography>
+                      </Box>
+                      <Tooltip 
+                        title="Work-Life Balance Rating" 
+                        arrow 
+                        placement="top"
+                        TransitionComponent={Zoom}
+                      >
+                        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                          <StyledRating value={data.workLifeBalance} readOnly size="small" precision={0.5} />
+                        </Box>
+                      </Tooltip>
+                    </Box>
+                  </CardContent>
+                </Card>
+              </Zoom>
             </Grid>
           );
         })}
@@ -313,185 +634,418 @@ function Results({ recommendations = [] }) {
 
       {/* Comparison Section */}
       {selectedCareers.length > 0 && (
-        <Box sx={{ mt: 6 }}>
-          <Typography variant="h4" gutterBottom sx={{ textAlign: 'center', mb: 3 }}>
-            <Compare sx={{ mr: 1, verticalAlign: 'middle' }} />
-            Career Comparison
-          </Typography>
-          
-          <TableContainer component={Paper} sx={{ mb: 4 }}>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell>Career</TableCell>
-                  <TableCell align="center">Average Salary</TableCell>
-                  <TableCell align="center">Growth Potential</TableCell>
-                  <TableCell align="center">Work-Life Balance</TableCell>
-                  <TableCell align="center">Demand</TableCell>
-                  <TableCell align="center">Education Required</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {selectedCareers.map((career) => {
-                  const data = careerDataState[career] || careerData[career];
-                  return (
-                    <TableRow key={career}>
-                      <TableCell component="th" scope="row">
-                        <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
-                          {career}
-                        </Typography>
-                      </TableCell>
-                      <TableCell align="center">
-                        <Typography variant="h6" sx={{ color: getSalaryColor(data.salary.average) }}>
-                          {formatSalary(data.salary.average)}
-                        </Typography>
-                      </TableCell>
-                      <TableCell align="center">
-                        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                          <Typography variant="body2" sx={{ mr: 1 }}>
-                            {data.growth}/5
+        <Fade in={true} timeout={800}>
+          <Box sx={{ mt: 8 }}>
+            <Box sx={{ 
+              display: 'flex', 
+              alignItems: 'center', 
+              justifyContent: 'center',
+              mb: 4
+            }}>
+              <Box 
+                sx={{ 
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: 50,
+                  height: 50,
+                  borderRadius: '50%',
+                  backgroundColor: alpha(theme.palette.primary.main, 0.1),
+                  mr: 2
+                }}
+              >
+                <Compare sx={{ fontSize: 28, color: theme.palette.primary.main }} />
+              </Box>
+              <Typography 
+                variant="h4" 
+                sx={{ 
+                  fontWeight: 600,
+                  color: theme.palette.primary.dark
+                }}
+              >
+                Career Comparison
+              </Typography>
+            </Box>
+            
+            <TableContainer 
+              component={Paper} 
+              sx={{ 
+                mb: 5, 
+                borderRadius: 3,
+                overflow: 'hidden',
+                boxShadow: `0 8px 40px ${alpha(theme.palette.primary.main, 0.1)}`,
+                border: `1px solid ${alpha(theme.palette.primary.main, 0.1)}`,
+              }}
+            >
+              <Table>
+                <StyledTableHead>
+                  <TableRow>
+                    <StyledTableCell>Career</StyledTableCell>
+                    <StyledTableCell align="center">Average Salary</StyledTableCell>
+                    <StyledTableCell align="center">Growth Potential</StyledTableCell>
+                    <StyledTableCell align="center">Work-Life Balance</StyledTableCell>
+                    <StyledTableCell align="center">Demand</StyledTableCell>
+                    <StyledTableCell align="center">Education Required</StyledTableCell>
+                  </TableRow>
+                </StyledTableHead>
+                <TableBody>
+                  {selectedCareers.map((career) => {
+                    const data = careerDataState[career] || careerData[career];
+                    return (
+                      <TableRow key={career} sx={{ '&:hover': { backgroundColor: alpha(theme.palette.primary.main, 0.02) } }}>
+                        <StyledTableCell component="th" scope="row">
+                          <Typography variant="subtitle1" sx={{ fontWeight: 600, color: theme.palette.primary.dark }}>
+                            {career}
                           </Typography>
-                          <TrendingUp sx={{ color: '#4caf50' }} />
-                        </Box>
-                      </TableCell>
-                      <TableCell align="center">
-                        <Rating value={data.workLifeBalance} readOnly size="small" />
-                      </TableCell>
-                      <TableCell align="center">
-                        <Chip 
-                          label={data.demand}
-                          color={data.demand === 'Very High' ? 'error' : data.demand === 'High' ? 'warning' : 'default'}
-                          size="small"
-                        />
-                      </TableCell>
-                      <TableCell align="center">
-                        <Typography variant="body2">
-                          {data.education}
-                        </Typography>
-                      </TableCell>
-                    </TableRow>
-                  );
-                })}
-              </TableBody>
-            </Table>
-          </TableContainer>
+                        </StyledTableCell>
+                        <StyledTableCell align="center">
+                          <Typography variant="h6" sx={{ color: getSalaryColor(data.salary.average), fontWeight: 600 }}>
+                            {formatSalary(data.salary.average)}
+                          </Typography>
+                        </StyledTableCell>
+                        <StyledTableCell align="center">
+                          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                            <StyledRating value={data.growth} readOnly precision={0.5} />
+                            <Typography variant="body2" sx={{ ml: 1, fontWeight: 500 }}>
+                              {data.growth}/5
+                            </Typography>
+                          </Box>
+                        </StyledTableCell>
+                        <StyledTableCell align="center">
+                          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                            <StyledRating value={data.workLifeBalance} readOnly precision={0.5} />
+                            <Typography variant="body2" sx={{ ml: 1, fontWeight: 500 }}>
+                              {data.workLifeBalance}/5
+                            </Typography>
+                          </Box>
+                        </StyledTableCell>
+                        <StyledTableCell align="center">
+                          <Chip 
+                            label={data.demand}
+                            color={data.demand === 'Very High' ? 'error' : data.demand === 'High' ? 'warning' : 'success'}
+                            size="small"
+                            sx={{ 
+                              fontWeight: 500,
+                              borderRadius: '50px',
+                              px: 1
+                            }}
+                          />
+                        </StyledTableCell>
+                        <StyledTableCell align="center">
+                          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                            <School sx={{ mr: 1, color: theme.palette.primary.main, fontSize: 20 }} />
+                            <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                              {data.education}
+                            </Typography>
+                          </Box>
+                        </StyledTableCell>
+                      </TableRow>
+                    );
+                  })}
+                </TableBody>
+              </Table>
+            </TableContainer>
 
           {/* Detailed Comparison */}
+          <Typography 
+            variant="h5" 
+            sx={{ 
+              mb: 3, 
+              fontWeight: 600,
+              color: theme.palette.primary.dark
+            }}
+          >
+            Detailed Career Information
+          </Typography>
+          
           <Grid container spacing={3}>
             {selectedCareers.map((career) => {
               const data = careerDataState[career] || careerData[career];
               return (
                 <Grid item xs={12} md={6} key={career}>
-                  <Card>
-                    <CardContent>
-                      <Typography variant="h5" gutterBottom sx={{ fontWeight: 'bold' }}>
+                  <Card 
+                    sx={{ 
+                      borderRadius: 3,
+                      overflow: 'hidden',
+                      boxShadow: `0 8px 40px ${alpha(theme.palette.primary.main, 0.1)}`,
+                      border: `1px solid ${alpha(theme.palette.primary.main, 0.1)}`,
+                    }}
+                  >
+                    <Box 
+                      sx={{ 
+                        p: 3, 
+                        borderBottom: `1px solid ${alpha(theme.palette.primary.main, 0.1)}`,
+                        backgroundColor: alpha(theme.palette.primary.main, 0.03),
+                      }}
+                    >
+                      <Typography 
+                        variant="h5" 
+                        gutterBottom 
+                        sx={{ 
+                          fontWeight: 600,
+                          color: theme.palette.primary.dark,
+                          display: 'flex',
+                          alignItems: 'center',
+                        }}
+                      >
+                        <WorkOutline sx={{ mr: 1.5, color: theme.palette.primary.main }} />
                         {career}
                       </Typography>
-                      
-                      <Accordion sx={{ mb: 2 }}>
-                        <AccordionSummary expandIcon={<ExpandMore />}>
-                          <Typography variant="subtitle1">Salary Breakdown</Typography>
-                        </AccordionSummary>
-                        <AccordionDetails>
-                          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-                            <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                              <Typography>Entry Level:</Typography>
-                              <Typography sx={{ color: getSalaryColor(data.salary.entry) }}>
+                      <Typography variant="body2" color="text.secondary">
+                        {data.description}
+                      </Typography>
+                    </Box>
+                    
+                    <CardContent sx={{ p: 0 }}>
+                      <StyledAccordion defaultExpanded>
+                        <StyledAccordionSummary 
+                          expandIcon={<ExpandMore />}
+                          sx={{ px: 3, py: 1.5 }}
+                        >
+                          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                            <AttachMoney sx={{ mr: 1.5, color: theme.palette.primary.main }} />
+                            <Typography variant="subtitle1" fontWeight={600}>Salary Breakdown</Typography>
+                          </Box>
+                        </StyledAccordionSummary>
+                        <AccordionDetails sx={{ px: 3, py: 2, backgroundColor: alpha(theme.palette.background.default, 0.5) }}>
+                          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
+                            <Box 
+                              sx={{ 
+                                display: 'flex', 
+                                justifyContent: 'space-between',
+                                p: 1.5,
+                                borderRadius: 2,
+                                backgroundColor: alpha(theme.palette.primary.main, 0.05),
+                              }}
+                            >
+                              <Typography fontWeight={500}>Entry Level:</Typography>
+                              <Typography sx={{ color: getSalaryColor(data.salary.entry), fontWeight: 600 }}>
                                 {formatSalary(data.salary.entry)}
                               </Typography>
                             </Box>
-                            <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                              <Typography>Mid Level:</Typography>
-                              <Typography sx={{ color: getSalaryColor(data.salary.mid) }}>
+                            <Box 
+                              sx={{ 
+                                display: 'flex', 
+                                justifyContent: 'space-between',
+                                p: 1.5,
+                                borderRadius: 2,
+                                backgroundColor: alpha(theme.palette.primary.main, 0.05),
+                              }}
+                            >
+                              <Typography fontWeight={500}>Mid Level:</Typography>
+                              <Typography sx={{ color: getSalaryColor(data.salary.mid), fontWeight: 600 }}>
                                 {formatSalary(data.salary.mid)}
                               </Typography>
                             </Box>
-                            <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                              <Typography>Senior Level:</Typography>
-                              <Typography sx={{ color: getSalaryColor(data.salary.senior) }}>
+                            <Box 
+                              sx={{ 
+                                display: 'flex', 
+                                justifyContent: 'space-between',
+                                p: 1.5,
+                                borderRadius: 2,
+                                backgroundColor: alpha(theme.palette.primary.main, 0.05),
+                              }}
+                            >
+                              <Typography fontWeight={500}>Senior Level:</Typography>
+                              <Typography sx={{ color: getSalaryColor(data.salary.senior), fontWeight: 600 }}>
                                 {formatSalary(data.salary.senior)}
                               </Typography>
                             </Box>
                           </Box>
                         </AccordionDetails>
-                      </Accordion>
+                      </StyledAccordion>
 
-                      <Accordion sx={{ mb: 2 }}>
-                        <AccordionSummary expandIcon={<ExpandMore />}>
-                          <Typography variant="subtitle1">Skills & Requirements</Typography>
-                        </AccordionSummary>
-                        <AccordionDetails>
+                      <StyledAccordion>
+                        <StyledAccordionSummary 
+                          expandIcon={<ExpandMore />}
+                          sx={{ px: 3, py: 1.5 }}
+                        >
+                          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                            <Psychology sx={{ mr: 1.5, color: theme.palette.primary.main }} />
+                            <Typography variant="subtitle1" fontWeight={600}>Skills & Requirements</Typography>
+                          </Box>
+                        </StyledAccordionSummary>
+                        <AccordionDetails sx={{ px: 3, py: 2, backgroundColor: alpha(theme.palette.background.default, 0.5) }}>
                           <Box>
-                            <Typography variant="subtitle2" gutterBottom>Required Skills:</Typography>
-                            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5, mb: 2 }}>
+                            <Typography variant="subtitle2" fontWeight={600} gutterBottom color="primary.dark">
+                              Required Skills:
+                            </Typography>
+                            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.8, mb: 3 }}>
                               {data.skills.map((skill) => (
-                                <Chip key={skill} label={skill} size="small" />
+                                <Chip 
+                                  key={skill} 
+                                  label={skill} 
+                                  size="small" 
+                                  sx={{ 
+                                    borderRadius: '50px',
+                                    backgroundColor: alpha(theme.palette.primary.main, 0.1),
+                                    color: theme.palette.primary.dark,
+                                    fontWeight: 500,
+                                  }} 
+                                />
                               ))}
                             </Box>
-                            <Typography variant="subtitle2" gutterBottom>Education:</Typography>
-                            <Typography variant="body2" sx={{ mb: 2 }}>
-                              {data.education}
+                            <Typography variant="subtitle2" fontWeight={600} gutterBottom color="primary.dark">
+                              Education:
                             </Typography>
-                            <Typography variant="subtitle2" gutterBottom>Work Environment:</Typography>
-                            <Typography variant="body2">
-                              {data.workEnvironment}
+                            <Box 
+                              sx={{ 
+                                display: 'flex', 
+                                alignItems: 'center',
+                                mb: 3,
+                                p: 1.5,
+                                borderRadius: 2,
+                                backgroundColor: alpha(theme.palette.primary.main, 0.05),
+                              }}
+                            >
+                              <School sx={{ mr: 1.5, color: theme.palette.primary.main }} />
+                              <Typography variant="body2" fontWeight={500}>
+                                {data.education}
+                              </Typography>
+                            </Box>
+                            <Typography variant="subtitle2" fontWeight={600} gutterBottom color="primary.dark">
+                              Work Environment:
                             </Typography>
+                            <Box 
+                              sx={{ 
+                                display: 'flex', 
+                                alignItems: 'center',
+                                p: 1.5,
+                                borderRadius: 2,
+                                backgroundColor: alpha(theme.palette.primary.main, 0.05),
+                              }}
+                            >
+                              <Business sx={{ mr: 1.5, color: theme.palette.primary.main }} />
+                              <Typography variant="body2" fontWeight={500}>
+                                {data.workEnvironment}
+                              </Typography>
+                            </Box>
                           </Box>
                         </AccordionDetails>
-                      </Accordion>
+                      </StyledAccordion>
 
-                      <Accordion sx={{ mb: 2 }}>
-                        <AccordionSummary expandIcon={<ExpandMore />}>
-                          <Typography variant="subtitle1">Pros & Cons</Typography>
-                        </AccordionSummary>
-                        <AccordionDetails>
-                          <Grid container spacing={2}>
-                            <Grid item xs={6}>
-                              <Typography variant="subtitle2" color="success.main" gutterBottom>
-                                Pros:
-                              </Typography>
-                              <Box component="ul" sx={{ pl: 2, m: 0 }}>
-                                {data.pros.map((pro, index) => (
-                                  <Typography key={index} component="li" variant="body2">
-                                    {pro}
-                                  </Typography>
-                                ))}
+                      <StyledAccordion>
+                        <StyledAccordionSummary 
+                          expandIcon={<ExpandMore />}
+                          sx={{ px: 3, py: 1.5 }}
+                        >
+                          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                            <BarChart sx={{ mr: 1.5, color: theme.palette.primary.main }} />
+                            <Typography variant="subtitle1" fontWeight={600}>Pros & Cons</Typography>
+                          </Box>
+                        </StyledAccordionSummary>
+                        <AccordionDetails sx={{ px: 3, py: 2, backgroundColor: alpha(theme.palette.background.default, 0.5) }}>
+                          <Grid container spacing={3}>
+                            <Grid item xs={12} sm={6}>
+                              <Box 
+                                sx={{ 
+                                  p: 2, 
+                                  borderRadius: 2,
+                                  backgroundColor: alpha(theme.palette.success.main, 0.05),
+                                  border: `1px solid ${alpha(theme.palette.success.main, 0.2)}`,
+                                  height: '100%',
+                                }}
+                              >
+                                <Typography 
+                                  variant="subtitle2" 
+                                  color="success.main" 
+                                  gutterBottom
+                                  sx={{ 
+                                    display: 'flex', 
+                                    alignItems: 'center',
+                                    fontWeight: 600,
+                                    mb: 1.5
+                                  }}
+                                >
+                                  <ThumbUp sx={{ mr: 1, fontSize: 18 }} />
+                                  Pros:
+                                </Typography>
+                                <Box component="ul" sx={{ pl: 2, m: 0 }}>
+                                  {data.pros.map((pro, index) => (
+                                    <Typography 
+                                      key={index} 
+                                      component="li" 
+                                      variant="body2"
+                                      sx={{ mb: 0.8 }}
+                                    >
+                                      {pro}
+                                    </Typography>
+                                  ))}
+                                </Box>
                               </Box>
                             </Grid>
-                            <Grid item xs={6}>
-                              <Typography variant="subtitle2" color="error.main" gutterBottom>
-                                Cons:
-                              </Typography>
-                              <Box component="ul" sx={{ pl: 2, m: 0 }}>
-                                {data.cons.map((con, index) => (
-                                  <Typography key={index} component="li" variant="body2">
-                                    {con}
-                                  </Typography>
-                                ))}
+                            <Grid item xs={12} sm={6}>
+                              <Box 
+                                sx={{ 
+                                  p: 2, 
+                                  borderRadius: 2,
+                                  backgroundColor: alpha(theme.palette.error.main, 0.05),
+                                  border: `1px solid ${alpha(theme.palette.error.main, 0.2)}`,
+                                  height: '100%',
+                                }}
+                              >
+                                <Typography 
+                                  variant="subtitle2" 
+                                  color="error.main" 
+                                  gutterBottom
+                                  sx={{ 
+                                    display: 'flex', 
+                                    alignItems: 'center',
+                                    fontWeight: 600,
+                                    mb: 1.5
+                                  }}
+                                >
+                                  <ThumbDown sx={{ mr: 1, fontSize: 18 }} />
+                                  Cons:
+                                </Typography>
+                                <Box component="ul" sx={{ pl: 2, m: 0 }}>
+                                  {data.cons.map((con, index) => (
+                                    <Typography 
+                                      key={index} 
+                                      component="li" 
+                                      variant="body2"
+                                      sx={{ mb: 0.8 }}
+                                    >
+                                      {con}
+                                    </Typography>
+                                  ))}
+                                </Box>
                               </Box>
                             </Grid>
                           </Grid>
                         </AccordionDetails>
-                      </Accordion>
+                      </StyledAccordion>
 
-                      <Accordion>
-                        <AccordionSummary expandIcon={<ExpandMore />}>
-                          <Typography variant="subtitle1">Top Locations</Typography>
-                        </AccordionSummary>
-                        <AccordionDetails>
-                          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                      <StyledAccordion>
+                        <StyledAccordionSummary 
+                          expandIcon={<ExpandMore />}
+                          sx={{ px: 3, py: 1.5 }}
+                        >
+                          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                            <LocationOn sx={{ mr: 1.5, color: theme.palette.primary.main }} />
+                            <Typography variant="subtitle1" fontWeight={600}>Top Locations</Typography>
+                          </Box>
+                        </StyledAccordionSummary>
+                        <AccordionDetails sx={{ px: 3, py: 2, backgroundColor: alpha(theme.palette.background.default, 0.5) }}>
+                          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.8 }}>
                             {data.locations.map((location) => (
                               <Chip 
                                 key={location} 
                                 label={location} 
                                 size="small" 
-                                variant="outlined"
-                                icon={<LocationOn />}
+                                icon={<LocationOn sx={{ fontSize: '1rem !important' }} />}
+                                sx={{ 
+                                  borderRadius: '50px',
+                                  backgroundColor: alpha(theme.palette.primary.main, 0.1),
+                                  color: theme.palette.primary.dark,
+                                  fontWeight: 500,
+                                  px: 0.5
+                                }} 
                               />
                             ))}
                           </Box>
                         </AccordionDetails>
-                      </Accordion>
+                      </StyledAccordion>
                     </CardContent>
                   </Card>
                 </Grid>
@@ -499,31 +1053,71 @@ function Results({ recommendations = [] }) {
             })}
           </Grid>
         </Box>
+      </Fade>
       )}
 
       {/* Action Buttons */}
-      <Box sx={{ textAlign: 'center', mt: 4 }}>
-        <Typography variant="body1" color="text.secondary" sx={{ mb: 2 }}>
-          Select up to 3 careers to compare them side by side
+      <Box 
+        sx={{ 
+          textAlign: 'center', 
+          mt: 6,
+          pt: 4,
+          borderTop: `1px solid ${alpha(theme.palette.primary.main, 0.1)}`,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center'
+        }}
+      >
+        <Typography 
+          variant="h6" 
+          color="text.secondary" 
+          sx={{ 
+            mb: 3,
+            maxWidth: 600,
+            fontWeight: 400
+          }}
+        >
+          {selectedCareers.length === 0 ? 
+            "Select up to 3 careers to compare them side by side" : 
+            `You've selected ${selectedCareers.length} ${selectedCareers.length === 1 ? 'career' : 'careers'} for comparison`
+          }
         </Typography>
-        <Button
-          variant="contained"
-          size="large"
-          onClick={() => navigate('/dashboard')}
-          sx={{ mr: 2 }}
-        >
-          Save Recommendations
-        </Button>
-        <Button
-          variant="outlined"
-          size="large"
-          onClick={() => navigate('/assessment')}
-        >
-          Retake Assessment
-        </Button>
+        <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', justifyContent: 'center' }}>
+          <Button
+            variant="contained"
+            size="large"
+            onClick={() => navigate('/dashboard')}
+            startIcon={<SaveAlt />}
+            sx={{ 
+              borderRadius: '50px',
+              px: 4,
+              py: 1.5,
+              fontWeight: 600,
+              boxShadow: '0 8px 20px rgba(0,0,0,0.12)',
+              '&:hover': {
+                boxShadow: '0 12px 20px rgba(0,0,0,0.18)',
+              }
+            }}
+          >
+            Save Recommendations
+          </Button>
+          <Button
+            variant="outlined"
+            size="large"
+            onClick={() => navigate('/assessment')}
+            startIcon={<Refresh />}
+            sx={{ 
+              borderRadius: '50px',
+              px: 4,
+              py: 1.5,
+            }}
+          >
+            Retake Assessment
+          </Button>
+        </Box>
       </Box>
     </Container>
   );
 }
 
-export default Results; 
+export default Results;

@@ -1,76 +1,271 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Container,
   Box,
   Typography,
+  Button,
+  Paper,
+  FormControl,
+  FormControlLabel,
+  Radio,
+  RadioGroup,
   Stepper,
   Step,
   StepLabel,
-  Button,
-  Paper,
-  TextField,
-  Chip,
-  Rating,
-  FormControl,
-  FormLabel,
-  RadioGroup,
-  FormControlLabel,
-  Radio,
-  Slider,
+  StepContent,
+  StepConnector,
+  CircularProgress,
+  Card,
+  CardContent,
+  Divider,
+  useTheme,
+  alpha,
+  LinearProgress,
+  Tooltip,
+  Zoom,
 } from '@mui/material';
-import Select from '@mui/material/Select';
-import MenuItem from '@mui/material/MenuItem';
+import { styled } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import AssessmentIcon from '@mui/icons-material/Assessment';
 
-const steps = ['Basic Information', 'Skills & Experience', 'Interests & Preferences', 'Work Environment'];
+// Career matching questions with their options
+const careerQuestions = [
+  {
+    id: 1,
+    question: 'How do you prefer to communicate in a professional setting?',
+    options: [
+      { label: 'A. I enjoy public speaking and presenting', value: 'A' },
+      { label: 'B. I prefer writing reports or emails', value: 'B' },
+      { label: 'C. I like casual one-on-one conversations', value: 'C' },
+      { label: 'D. I\'m more of a listener than a speaker', value: 'D' },
+    ],
+  },
+  {
+    id: 2,
+    question: 'How do you handle decision-making under pressure?',
+    options: [
+      { label: 'A. I thrive under pressure and make quick decisions', value: 'A' },
+      { label: 'B. I prefer to analyze data before deciding', value: 'B' },
+      { label: 'C. I seek input from others before making decisions', value: 'C' },
+      { label: 'D. I avoid high-pressure situations', value: 'D' },
+    ],
+  },
+  {
+    id: 3,
+    question: 'What role do you usually take in group settings?',
+    options: [
+      { label: 'A. I lead and delegate tasks', value: 'A' },
+      { label: 'B. I organize and keep everyone on track', value: 'B' },
+      { label: 'C. I support and help where needed', value: 'C' },
+      { label: 'D. I prefer working alone', value: 'D' },
+    ],
+  },
+  {
+    id: 4,
+    question: 'How comfortable are you with strategic planning?',
+    options: [
+      { label: 'A. I often think long-term and plan ahead', value: 'A' },
+      { label: 'B. I can plan short-term, but not strategic goals', value: 'B' },
+      { label: 'C. I prefer when others handle strategy', value: 'C' },
+      { label: 'D. I focus on the now, not the future', value: 'D' },
+    ],
+  },
+  {
+    id: 5,
+    question: 'What\'s your approach to solving complex problems?',
+    options: [
+      { label: 'A. I break it into steps and analyze each one', value: 'A' },
+      { label: 'B. I brainstorm creatively for unique solutions', value: 'B' },
+      { label: 'C. I consult with others to find a path forward', value: 'C' },
+      { label: 'D. I usually avoid complex problems', value: 'D' },
+    ],
+  },
+  {
+    id: 6,
+    question: 'Which work environment suits you best?',
+    options: [
+      { label: 'A. Fast-paced and dynamic', value: 'A' },
+      { label: 'B. Structured and predictable', value: 'B' },
+      { label: 'C. Creative and open', value: 'C' },
+      { label: 'D. Independent and quiet', value: 'D' },
+    ],
+  },
+  {
+    id: 7,
+    question: 'How do you feel about managing or leading others?',
+    options: [
+      { label: 'A. I enjoy being in charge and mentoring others', value: 'A' },
+      { label: 'B. I can lead if needed, but don\'t seek it', value: 'B' },
+      { label: 'C. I prefer supporting roles', value: 'C' },
+      { label: 'D. I avoid leadership roles', value: 'D' },
+    ],
+  },
+  {
+    id: 8,
+    question: 'Which of these best describes your time management?',
+    options: [
+      { label: 'A. I\'m excellent at juggling multiple tasks', value: 'A' },
+      { label: 'B. I work best on one task at a time', value: 'B' },
+      { label: 'C. I often need help prioritizing', value: 'C' },
+      { label: 'D. I work best without strict deadlines', value: 'D' },
+    ],
+  },
+  {
+    id: 9,
+    question: 'How do you prefer to handle interpersonal relationships at work?',
+    options: [
+      { label: 'A. I enjoy networking and building connections', value: 'A' },
+      { label: 'B. I like working with a small, close-knit team', value: 'B' },
+      { label: 'C. I prefer minimal social interaction', value: 'C' },
+      { label: 'D. I work well with all types of people', value: 'D' },
+    ],
+  },
+  {
+    id: 10,
+    question: 'What\'s your comfort level with making public decisions?',
+    options: [
+      { label: 'A. Very comfortable — I can justify my decisions', value: 'A' },
+      { label: 'B. Somewhat comfortable — I prefer private settings', value: 'B' },
+      { label: 'C. I avoid decision-making roles', value: 'C' },
+      { label: 'D. I follow directions more than I lead', value: 'D' },
+    ],
+  },
+  {
+    id: 11,
+    question: 'How do you feel about working with data and analytics?',
+    options: [
+      { label: 'A. I love analyzing numbers and trends', value: 'A' },
+      { label: 'B. I can work with data, but prefer people-focused tasks', value: 'B' },
+      { label: 'C. I avoid data-heavy work', value: 'C' },
+      { label: 'D. I enjoy visualizing data for storytelling', value: 'D' },
+    ],
+  },
+  {
+    id: 12,
+    question: 'Which skill comes most naturally to you?',
+    options: [
+      { label: 'A. Persuasion and negotiation', value: 'A' },
+      { label: 'B. Critical thinking and analysis', value: 'B' },
+      { label: 'C. Empathy and understanding', value: 'C' },
+      { label: 'D. Creativity and innovation', value: 'D' },
+    ],
+  },
+  {
+    id: 13,
+    question: 'How do you approach learning new information?',
+    options: [
+      { label: 'A. I enjoy self-directed learning and growth', value: 'A' },
+      { label: 'B. I learn best through mentorship', value: 'B' },
+      { label: 'C. I prefer formal training programs', value: 'C' },
+      { label: 'D. I like learning through hands-on experiences', value: 'D' },
+    ],
+  },
+  {
+    id: 14,
+    question: 'Which type of impact motivates you most?',
+    options: [
+      { label: 'A. Influencing company strategy or growth', value: 'A' },
+      { label: 'B. Helping people directly', value: 'B' },
+      { label: 'C. Solving technical or operational problems', value: 'C' },
+      { label: 'D. Creating something meaningful or beautiful', value: 'D' },
+    ],
+  },
+  {
+    id: 15,
+    question: 'What kind of feedback do you prefer?',
+    options: [
+      { label: 'A. Direct and constructive', value: 'A' },
+      { label: 'B. Encouraging and supportive', value: 'B' },
+      { label: 'C. Formal performance reviews', value: 'C' },
+      { label: 'D. Minimal — I prefer working independently', value: 'D' },
+    ],
+  },
+];
+
+// Define steps for the stepper
+const steps = ['Career Skills', 'Work Environment', 'Personal Preferences', 'Review'];
+
+// Custom styled Radio component
+const StyledRadio = styled(Radio)(({ theme }) => ({
+  '&.Mui-checked': {
+    color: theme.palette.primary.main,
+  },
+  padding: '12px',
+}));
+
+// Custom StepConnector
+const ColorlibConnector = styled(StepConnector)(({ theme }) => ({
+  [`&.MuiStepConnector-alternativeLabel`]: {
+    top: 22,
+  },
+  [`&.MuiStepConnector-active`]: {
+    [`& .MuiStepConnector-line`]: {
+      backgroundImage: `linear-gradient(95deg, ${theme.palette.secondary.main} 0%, ${theme.palette.primary.main} 100%)`,
+    },
+  },
+  [`&.MuiStepConnector-completed`]: {
+    [`& .MuiStepConnector-line`]: {
+      backgroundImage: `linear-gradient(95deg, ${theme.palette.secondary.main} 0%, ${theme.palette.primary.main} 100%)`,
+    },
+  },
+  [`& .MuiStepConnector-line`]: {
+    height: 3,
+    border: 0,
+    backgroundColor: theme.palette.mode === 'dark' ? theme.palette.grey[800] : '#eaeaf0',
+    borderRadius: 1,
+  },
+}));
 
 function Assessment({ setRecommendations }) {
   const navigate = useNavigate();
+  const theme = useTheme();
   const [activeStep, setActiveStep] = useState(0);
-  const [skills, setSkills] = useState([]);
-  const [newSkill, setNewSkill] = useState('');
-  const [formData, setFormData] = useState({
-    currentJobTitle: '',
-    yearsExperience: '',
-    education: '',
-    skills: [],
-    problemSolving: 3,
-    workStyle: 'balanced',
-    workEnvironment: 'hybrid',
-    salaryExpectation: [500, 50000],
-    workLifeBalance: 3,
-  });
+  const [answers, setAnswers] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [progress, setProgress] = useState(0);
+
+  // Calculate progress percentage
+  useEffect(() => {
+    const answeredCount = Object.keys(answers).length;
+    const totalQuestions = careerQuestions.length;
+    setProgress((answeredCount / totalQuestions) * 100);
+  }, [answers]);
 
   const handleNext = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
     setActiveStep((prevStep) => prevStep + 1);
   };
 
   const handleBack = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
     setActiveStep((prevStep) => prevStep - 1);
   };
 
-  const handleSkillAdd = () => {
-    if (newSkill && !skills.includes(newSkill)) {
-      const updatedSkills = [...skills, newSkill];
-      setSkills(updatedSkills);
-      setFormData({ ...formData, skills: updatedSkills });
-      setNewSkill('');
-    }
-  };
-
-  const handleSkillDelete = (skillToDelete) => {
-    const updatedSkills = skills.filter((skill) => skill !== skillToDelete);
-    setSkills(updatedSkills);
-    setFormData({ ...formData, skills: updatedSkills });
+  const handleAnswerChange = (questionId, value) => {
+    setAnswers(prev => ({
+      ...prev,
+      [questionId]: value
+    }));
   };
 
   const handleSubmit = async () => {
+    setIsSubmitting(true);
     try {
+      // Build a string from the answers - just the letter values (A, B, C, D)
+      const answersString = Object.entries(answers)
+        .map(([questionId, answer]) => answer)
+        .join(' ');
+
+      console.log('Answers string to send to backend:', answersString);
+      
       // Send assessment data to backend
       const response = await fetch('http://localhost:5000/api/recommend', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
+        body: JSON.stringify({ answers: answersString })
       });
       
       if (!response.ok) {
@@ -81,6 +276,11 @@ function Assessment({ setRecommendations }) {
       
       if (data.success && data.recommendations) {
         // Extract career names from recommendations
+        const careerNames = data.recommendations.map(rec => rec.career_name);
+        setRecommendations(careerNames);
+        navigate('/results');
+      } else if (data.recommendations) {
+        // Handle case where success might not be in the response but recommendations are
         const careerNames = data.recommendations.map(rec => rec.career_name);
         setRecommendations(careerNames);
         navigate('/results');
@@ -99,192 +299,370 @@ function Assessment({ setRecommendations }) {
       ];
       setRecommendations(mockRecommendations);
       navigate('/results');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
+  // Render questions for the current step
   const getStepContent = (step) => {
-    switch (step) {
-      case 0:
-        return (
-          <Box sx={{ mt: 2 }}>
-            <TextField
-              fullWidth
-              label="Current Job Title"
-              margin="normal"
-              value={formData.currentJobTitle || ''}
-              onChange={(e) => setFormData({ ...formData, currentJobTitle: e.target.value })}
-            />
-            <TextField
-              fullWidth
-              label="Years of Experience"
-              type="number"
-              margin="normal"
-              value={formData.yearsExperience || ''}
-              onChange={(e) => setFormData({ ...formData, yearsExperience: e.target.value })}
-            />
-            <TextField
-              fullWidth
-              label="Education Level"
-              margin="normal"
-              value={formData.education || ''}
-              onChange={(e) => setFormData({ ...formData, education: e.target.value })}
-              select
-            >
-              <MenuItem value="high-school">High School</MenuItem>
-              <MenuItem value="diploma">Diploma</MenuItem>
-              <MenuItem value="bachelors">Bachelor's Degree</MenuItem>
-              <MenuItem value="masters">Master's Degree</MenuItem>
-              <MenuItem value="phd">Ph.D.</MenuItem>
-            </TextField>
-          </Box>
-        );
-
-      case 1:
-        return (
-          <Box sx={{ mt: 2 }}>
-            <Typography variant="subtitle1" gutterBottom>
-              Add your skills
+    // Calculate which questions to show based on the current step
+    let questionsToShow = [];
+    if (step === 0) {
+      questionsToShow = careerQuestions.slice(0, 5);
+    } else if (step === 1) {
+      questionsToShow = careerQuestions.slice(5, 10);
+    } else if (step === 2) {
+      questionsToShow = careerQuestions.slice(10, 15);
+    } else if (step === 3) {
+      // Review step - show all answers
+      return (
+        <Box sx={{ mt: 3, px: { xs: 1, md: 3 } }}>
+          <Typography variant="h5" gutterBottom color="primary.dark" fontWeight="600">
+            Review Your Answers
+          </Typography>
+          <Typography variant="body1" color="text.secondary" paragraph sx={{ mb: 4 }}>
+            Please review your answers before submitting. You can go back to any section to make changes.
+          </Typography>
+          
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3, alignItems: 'center' }}>
+            <Typography variant="h6" fontWeight="500">
+              Completion Status
             </Typography>
-            <Box sx={{ display: 'flex', gap: 1, mb: 2 }}>
-              <TextField
-                fullWidth
-                label="Add a skill"
-                value={newSkill}
-                onChange={(e) => setNewSkill(e.target.value)}
-                onKeyPress={(e) => e.key === 'Enter' && handleSkillAdd()}
-              />
-              <Button variant="contained" onClick={handleSkillAdd}>
-                Add
-              </Button>
-            </Box>
-            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-              {skills.map((skill) => (
-                <Chip
-                  key={skill}
-                  label={skill}
-                  onDelete={() => handleSkillDelete(skill)}
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <Typography variant="body2" color="text.secondary" sx={{ mr: 2 }}>
+                {Object.keys(answers).length} of {careerQuestions.length} questions answered
+              </Typography>
+              <Box sx={{ position: 'relative', display: 'inline-flex' }}>
+                <CircularProgress 
+                  variant="determinate" 
+                  value={progress} 
+                  size={40} 
+                  thickness={4} 
+                  sx={{ color: progress === 100 ? theme.palette.success.main : theme.palette.primary.main }}
                 />
-              ))}
+                <Box
+                  sx={{
+                    top: 0,
+                    left: 0,
+                    bottom: 0,
+                    right: 0,
+                    position: 'absolute',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <Typography variant="caption" component="div" color="text.secondary">
+                    {`${Math.round(progress)}%`}
+                  </Typography>
+                </Box>
+              </Box>
             </Box>
           </Box>
-        );
-
-      case 2:
-        return (
-          <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 4, mt: 2 }}>
-            {/* Problem-solving section */}
-            <Box>
-              <Typography gutterBottom>How much do you enjoy problem-solving?</Typography>
-              <Rating
-                name="problem-solving"
-                value={formData.problemSolving || 3}
-                onChange={(_, newValue) =>
-                  setFormData({ ...formData, problemSolving: newValue || 0 })
-                }
-                size="large"
-                sx={{ mb: 3 }}
-              />
-            </Box>
-
-            {/* Preferred Work Style section */}
-            <FormControl component="fieldset" sx={{ mb: 3 }}>
-              <FormLabel component="legend">Preferred Work Style</FormLabel>
-              <RadioGroup 
-                value={formData.workStyle || 'balanced'}
-                onChange={(e) => setFormData({ ...formData, workStyle: e.target.value })}
+          
+          <Divider sx={{ mb: 3 }} />
+          
+          {steps.map((sectionTitle, index) => {
+            const sectionQuestions = careerQuestions.slice(index * 5, (index + 1) * 5);
+            const sectionAnswered = sectionQuestions.filter(q => answers[q.id]).length;
+            const sectionProgress = (sectionAnswered / sectionQuestions.length) * 100;
+            
+            return (
+              <Card 
+                key={index} 
+                elevation={0} 
+                sx={{ 
+                  mb: 3, 
+                  border: `1px solid ${alpha(theme.palette.primary.main, 0.1)}`,
+                  borderRadius: 2,
+                  overflow: 'visible'
+                }}
               >
-                <FormControlLabel
-                  value="independent"
-                  control={<Radio />}
-                  label="Independent Work"
-                />
-                <FormControlLabel
-                  value="collaborative"
-                  control={<Radio />}
-                  label="Collaborative Work"
-                />
-                <FormControlLabel
-                  value="balanced"
-                  control={<Radio />}
-                  label="Balanced Mix"
-                />
-              </RadioGroup>
-            </FormControl>
-
-            {/* Salary Range section */}
-            <Box>
-              <Typography gutterBottom>Desired Salary Range</Typography>
-              <Slider
-                value={formData.salaryExpectation}
-                onChange={(_, newValue) =>
-                  setFormData({ ...formData, salaryExpectation: newValue })
-                }
-                valueLabelDisplay="auto"
-                min={500}
-                max={200000}
-                step={500}
-                marks
-                sx={{ mb: 3 }}
-              />
-            </Box>
-          </Box>
-        );
-
-      case 3:
-        return (
-          <Box sx={{ mt: 2 }}>
-            <FormControl component="fieldset" sx={{ mb: 3 }}>
-              <FormLabel component="legend">Preferred Work Environment</FormLabel>
-              <RadioGroup 
-                value={formData.workEnvironment || 'hybrid'}
-                onChange={(e) => setFormData({ ...formData, workEnvironment: e.target.value })}
-              >
-                <FormControlLabel
-                  value="remote"
-                  control={<Radio />}
-                  label="Remote Work"
-                />
-                <FormControlLabel
-                  value="office"
-                  control={<Radio />}
-                  label="Office-based"
-                />
-                <FormControlLabel
-                  value="hybrid"
-                  control={<Radio />}
-                  label="Hybrid"
-                />
-              </RadioGroup>
-            </FormControl>
-
-            <Typography gutterBottom>Work-Life Balance Importance</Typography>
-            <Rating
-              name="work-life-balance"
-              value={formData.workLifeBalance}
-              onChange={(_, newValue) =>
-                setFormData({ ...formData, workLifeBalance: newValue || 0 })
-              }
-              size="large"
-            />
-          </Box>
-        );
-
-      default:
-        return 'Unknown step';
+                <CardContent sx={{ p: 3 }}>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+                    <Typography variant="h6" fontWeight="500" color="primary.dark">
+                      {sectionTitle}
+                    </Typography>
+                    <Button 
+                      size="small" 
+                      onClick={() => setActiveStep(index)}
+                      startIcon={<ArrowBackIcon fontSize="small" />}
+                    >
+                      Edit Section
+                    </Button>
+                  </Box>
+                  
+                  <Box sx={{ mb: 2, display: 'flex', alignItems: 'center' }}>
+                    <LinearProgress 
+                      variant="determinate" 
+                      value={sectionProgress} 
+                      sx={{ 
+                        flexGrow: 1, 
+                        mr: 2, 
+                        height: 8, 
+                        borderRadius: 4,
+                        backgroundColor: alpha(theme.palette.primary.main, 0.1),
+                        '& .MuiLinearProgress-bar': {
+                          borderRadius: 4,
+                          backgroundColor: sectionProgress === 100 ? theme.palette.success.main : theme.palette.primary.main,
+                        }
+                      }} 
+                    />
+                    <Typography variant="body2" color="text.secondary">
+                      {sectionAnswered}/{sectionQuestions.length}
+                    </Typography>
+                  </Box>
+                  
+                  <Box sx={{ pl: 2 }}>
+                    {sectionQuestions.map((question) => {
+                      const answer = answers[question.id];
+                      const selectedOption = question.options.find(opt => opt.value === answer);
+                      
+                      return (
+                        <Box key={question.id} sx={{ mb: 2, display: 'flex', alignItems: 'flex-start' }}>
+                          {answer && (
+                            <CheckCircleOutlineIcon 
+                              sx={{ 
+                                color: theme.palette.success.main, 
+                                mr: 1,
+                                mt: 0.5,
+                                fontSize: 20 
+                              }} 
+                            />
+                          )}
+                          <Box>
+                            <Typography variant="subtitle2" fontWeight="500">
+                              {question.id}. {question.question}
+                            </Typography>
+                            {answer ? (
+                              <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
+                                {selectedOption?.label}
+                              </Typography>
+                            ) : (
+                              <Typography variant="body2" color="error" sx={{ mt: 0.5, fontStyle: 'italic' }}>
+                                Not answered
+                              </Typography>
+                            )}
+                          </Box>
+                        </Box>
+                      );
+                    })}
+                  </Box>
+                </CardContent>
+              </Card>
+            );
+          })}
+        </Box>
+      );
     }
+
+    return (
+      <Box sx={{ mt: 3 }}>
+        {questionsToShow.map((question) => {
+          const isAnswered = answers[question.id];
+          
+          return (
+            <Card 
+              key={question.id} 
+              elevation={0} 
+              sx={{ 
+                mb: 4, 
+                borderRadius: 2,
+                border: `1px solid ${alpha(theme.palette.primary.main, isAnswered ? 0.2 : 0.1)}`,
+                transition: 'all 0.3s ease',
+                backgroundColor: isAnswered ? alpha(theme.palette.primary.light, 0.05) : 'transparent',
+                '&:hover': {
+                  borderColor: alpha(theme.palette.primary.main, 0.3),
+                  boxShadow: `0 4px 20px ${alpha(theme.palette.primary.main, 0.1)}`,
+                }
+              }}
+            >
+              <CardContent sx={{ p: 3 }}>
+                <Box sx={{ display: 'flex', alignItems: 'flex-start', mb: 2 }}>
+                  <Typography 
+                    variant="h6" 
+                    fontWeight="500" 
+                    gutterBottom
+                    sx={{ color: theme.palette.primary.dark }}
+                  >
+                    {question.id}. {question.question}
+                  </Typography>
+                  {isAnswered && (
+                    <Tooltip title="Question answered" arrow TransitionComponent={Zoom}>
+                      <CheckCircleOutlineIcon 
+                        sx={{ 
+                          color: theme.palette.success.main, 
+                          ml: 1,
+                          mt: 0.5 
+                        }} 
+                      />
+                    </Tooltip>
+                  )}
+                </Box>
+                
+                <FormControl component="fieldset" fullWidth>
+                  <RadioGroup
+                    value={answers[question.id] || ''}
+                    onChange={(e) => handleAnswerChange(question.id, e.target.value)}
+                  >
+                    {question.options.map((option) => (
+                      <FormControlLabel
+                        key={option.value}
+                        value={option.value}
+                        control={<StyledRadio />}
+                        label={
+                          <Typography variant="body1">
+                            {option.label}
+                          </Typography>
+                        }
+                        sx={{ 
+                          mb: 1.5,
+                          ml: 0.5,
+                          p: 1,
+                          borderRadius: 2,
+                          transition: 'all 0.2s',
+                          '&:hover': {
+                            backgroundColor: alpha(theme.palette.primary.main, 0.05),
+                          },
+                          ...(answers[question.id] === option.value && {
+                            backgroundColor: alpha(theme.palette.primary.main, 0.1),
+                          })
+                        }}
+                      />
+                    ))}
+                  </RadioGroup>
+                </FormControl>
+              </CardContent>
+            </Card>
+          );
+        })}
+      </Box>
+    );
+  };
+
+  // Calculate if the current step is complete (all questions answered)
+  const isStepComplete = () => {
+    if (activeStep === 0) {
+      return careerQuestions.slice(0, 5).every(q => answers[q.id]);
+    } else if (activeStep === 1) {
+      return careerQuestions.slice(5, 10).every(q => answers[q.id]);
+    } else if (activeStep === 2) {
+      return careerQuestions.slice(10, 15).every(q => answers[q.id]);
+    }
+    return true;
+  };
+
+  // Calculate if all questions have been answered
+  const allQuestionsAnswered = () => {
+    return careerQuestions.every(q => answers[q.id]);
   };
 
   return (
-    <Container maxWidth="md" sx={{ mb: 4 }}>
-      <Paper elevation={3} sx={{ p: 4, mt: 8, borderRadius: 2 }}>
-        <Typography component="h1" variant="h4" align="center" gutterBottom>
-          Career Assessment
+    <Container maxWidth="md" sx={{ mb: 6, px: { xs: 2, sm: 3 } }}>
+      <Box sx={{ 
+        display: 'flex', 
+        flexDirection: 'column', 
+        alignItems: 'center',
+        textAlign: 'center',
+        mt: { xs: 4, md: 6 },
+        mb: 4
+      }}>
+        <Box 
+          sx={{ 
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: 80,
+            height: 80,
+            borderRadius: '50%',
+            backgroundColor: alpha(theme.palette.primary.main, 0.1),
+            mb: 3
+          }}
+        >
+          <AssessmentIcon sx={{ fontSize: 40, color: theme.palette.primary.main }} />
+        </Box>
+        <Typography 
+          component="h1" 
+          variant="h3" 
+          align="center" 
+          gutterBottom
+          sx={{ 
+            fontWeight: 700,
+            color: theme.palette.primary.dark,
+            mb: 2
+          }}
+        >
+          Career Matching Assessment
         </Typography>
-        <Typography variant="subtitle1" align="center" sx={{ mb: 4 }}>
-          Let's find the perfect career path for you
+        <Typography 
+          variant="h6" 
+          align="center" 
+          color="text.secondary"
+          sx={{ 
+            maxWidth: 600,
+            mb: 2,
+            fontWeight: 400
+          }}
+        >
+          Answer these questions to find your ideal career path
         </Typography>
-
-        <Stepper activeStep={activeStep} sx={{ mb: 4 }}>
+        
+        <Box sx={{ width: '100%', mb: 2 }}>
+          <LinearProgress 
+            variant="determinate" 
+            value={progress} 
+            sx={{ 
+              height: 8, 
+              borderRadius: 4,
+              mb: 1,
+              backgroundColor: alpha(theme.palette.primary.main, 0.1),
+              '& .MuiLinearProgress-bar': {
+                borderRadius: 4,
+                backgroundColor: progress === 100 ? theme.palette.success.main : theme.palette.primary.main,
+              }
+            }} 
+          />
+          <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+            <Typography variant="body2" color="text.secondary">
+              Progress: {Math.round(progress)}%
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              {Object.keys(answers).length}/{careerQuestions.length} questions
+            </Typography>
+          </Box>
+        </Box>
+      </Box>
+      
+      <Paper 
+        elevation={0} 
+        sx={{ 
+          p: { xs: 2, sm: 4 }, 
+          borderRadius: 3,
+          border: `1px solid ${alpha(theme.palette.primary.main, 0.1)}`,
+          boxShadow: `0 8px 40px ${alpha(theme.palette.primary.main, 0.1)}`,
+        }}
+      >
+        <Stepper 
+          activeStep={activeStep} 
+          alternativeLabel 
+          connector={<ColorlibConnector />}
+          sx={{ 
+            mb: 5,
+            '& .MuiStepLabel-label': {
+              mt: 1,
+              fontWeight: 500,
+            },
+            '& .MuiStepLabel-label.Mui-active': {
+              color: theme.palette.primary.main,
+              fontWeight: 600,
+            },
+            '& .MuiStepLabel-label.Mui-completed': {
+              color: theme.palette.success.main,
+              fontWeight: 600,
+            },
+          }}
+        >
           {steps.map((label) => (
             <Step key={label}>
               <StepLabel>{label}</StepLabel>
@@ -293,35 +671,85 @@ function Assessment({ setRecommendations }) {
         </Stepper>
 
         {activeStep === steps.length ? (
-          <Box sx={{ textAlign: 'center' }}>
-            <Typography variant="h6" gutterBottom>
-              Thank you for completing the assessment!
+          <Box sx={{ textAlign: 'center', py: 4 }}>
+            <Box 
+              sx={{ 
+                width: 100,
+                height: 100,
+                borderRadius: '50%',
+                backgroundColor: alpha(theme.palette.success.main, 0.1),
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                mx: 'auto',
+                mb: 3
+              }}
+            >
+              <CheckCircleOutlineIcon sx={{ fontSize: 50, color: theme.palette.success.main }} />
+            </Box>
+            <Typography variant="h4" gutterBottom fontWeight="600" color="primary.dark">
+              Assessment Complete!
             </Typography>
-            <Typography variant="subtitle1" color="text.secondary" paragraph>
-              We're analyzing your responses to find the best career matches.
+            <Typography variant="h6" color="text.secondary" paragraph sx={{ maxWidth: 500, mx: 'auto', mb: 4 }}>
+              Thank you for completing the assessment. We're ready to analyze your responses and find your ideal career matches.
             </Typography>
             <Button
               variant="contained"
+              color="secondary"
+              size="large"
               onClick={handleSubmit}
-              sx={{ mt: 2 }}
+              disabled={isSubmitting}
+              endIcon={isSubmitting ? <CircularProgress size={20} color="inherit" /> : <ArrowForwardIcon />}
+              sx={{ 
+                mt: 2,
+                py: 1.5,
+                px: 4,
+                borderRadius: '50px',
+                fontWeight: 600,
+                boxShadow: '0 8px 20px rgba(0,0,0,0.12)',
+                '&:hover': {
+                  boxShadow: '0 12px 20px rgba(0,0,0,0.18)',
+                }
+              }}
             >
-              Finish Assessment
+              {isSubmitting ? 'Processing...' : 'Get Career Recommendations'}
             </Button>
           </Box>
         ) : (
           <>
             {getStepContent(activeStep)}
-            <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 3 }}>
+            <Box 
+              sx={{ 
+                display: 'flex', 
+                justifyContent: 'space-between', 
+                mt: 4,
+                pt: 3,
+                borderTop: `1px solid ${alpha(theme.palette.primary.main, 0.1)}`
+              }}
+            >
               <Button
                 disabled={activeStep === 0}
                 onClick={handleBack}
-                sx={{ mr: 1 }}
+                startIcon={<ArrowBackIcon />}
+                sx={{ 
+                  borderRadius: '50px',
+                  px: 3,
+                  py: 1,
+                }}
               >
                 Back
               </Button>
               <Button
                 variant="contained"
                 onClick={handleNext}
+                disabled={activeStep === 3 ? !allQuestionsAnswered() : !isStepComplete()}
+                endIcon={<ArrowForwardIcon />}
+                sx={{ 
+                  borderRadius: '50px',
+                  px: 3,
+                  py: 1,
+                  fontWeight: 600,
+                }}
               >
                 {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
               </Button>

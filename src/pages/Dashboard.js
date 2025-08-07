@@ -63,7 +63,7 @@ function Dashboard() {
         <Grid item xs={12}>
           <Paper sx={{ p: 3, display: 'flex', flexDirection: 'column' }}>
             <Typography variant="h4" gutterBottom>
-              Welcome back, User!
+              Dashboard
             </Typography>
             <Typography variant="body1" color="text.secondary">
               Here are your personalized career recommendations based on your assessment.

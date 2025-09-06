@@ -12,7 +12,7 @@ class SearchResult(BaseModel):
 app = FastAPI()
 
 #use a diffferent api key and host url for production
-pine = PineconeService(api_key="pck", host_url="https://career-index-szusshi.svc.aped-4627-b74a.pinecone.io")
+pine = PineconeService(api_key="", host_url="https://career-index-szusshi.svc.aped-4627-b74a.pinecone.io")
 
 @app.on_event("startup")
 async def startup_event():

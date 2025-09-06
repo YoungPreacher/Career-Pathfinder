@@ -6,8 +6,9 @@ from typing import List
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+os.environ["PINECONE_API_KEY"] = "pcsk_65RMAx_U7faaYfFzsDryrJNadyjdWKGDfBBpYasiCQXR8NizYi6Kk9XNQyMq8ubjv3pMJ5"
 # Initialize Pinecone
-pc = Pinecone(api_key="pcsk_58XvpF_RVdP5PfRrHDd8apxTU5gXjpn6i1diqdLvmPZwXXd2KgUAS2w62CNYZ31cdWL8Ek")
+pc = Pinecone(api_key="pcsk_65RMAx_U7faaYfFzsDryrJNadyjdWKGDfBBpYasiCQXR8NizYi6Kk9XNQyMq8ubjv3pMJ5")
 index_name = "career-index"
 host_url = "https://career-index-szusshi.svc.aped-4627-b74a.pinecone.io"
 

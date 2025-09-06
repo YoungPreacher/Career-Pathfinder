@@ -21,7 +21,6 @@ import {
   Accordion,
   AccordionSummary,
   AccordionDetails,
-  IconButton,
   Tooltip,
   CircularProgress,
   useTheme,
@@ -34,16 +33,13 @@ import { styled } from '@mui/material/styles';
 import {
   TrendingUp,
   School,
-  Work,
   LocationOn,
   AttachMoney,
   ExpandMore,
   Compare,
-  Star,
   Business,
   Psychology,
   CheckCircle,
-  ArrowBack,
   SaveAlt,
   Refresh,
   EmojiEvents,
@@ -52,7 +48,7 @@ import {
   ThumbUp,
   ThumbDown,
 } from '@mui/icons-material';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 // Career data - will be fetched from backend
 let careerData = {
@@ -150,42 +146,15 @@ let careerData = {
 
 function Results({ recommendations = [] }) {
   const navigate = useNavigate();
-  const location = useLocation();
+
   const [selectedCareers, setSelectedCareers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [careerDataState, setCareerDataState] = useState({});
 
   useEffect(() => {
-    const fetchCareerData = async () => {
-      try {
-        // Try to fetch career data from backend
-        const response = await fetch('http://localhost:5000/api/careers');
-        if (response.ok) {
-          const data = await response.json();
-          // Fetch detailed data for each career
-          const detailedData = {};
-          for (const career of data.careers) {
-            const careerResponse = await fetch(`http://localhost:5000/api/career/${encodeURIComponent(career)}`);
-            if (careerResponse.ok) {
-              const careerData = await careerResponse.json();
-              detailedData[career] = careerData.career;
-            }
-          }
-          setCareerDataState(detailedData);
-        } else {
-          // Fallback to local data if backend is not available
-          setCareerDataState(careerData);
-        }
-      } catch (error) {
-        console.error('Error fetching career data:', error);
-        // Fallback to local data
-        setCareerDataState(careerData);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchCareerData();
+    // Initialize with the local career data
+    setCareerDataState(careerData);
+    setLoading(false);
   }, []);
 
   const handleCareerSelect = (career) => {

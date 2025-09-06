@@ -37,150 +37,150 @@ const careerQuestions = [
     id: 1,
     question: 'How do you prefer to communicate in a professional setting?',
     options: [
-      { label: 'A. I enjoy public speaking and presenting', value: 'A' },
-      { label: 'B. I prefer writing reports or emails', value: 'B' },
-      { label: 'C. I like casual one-on-one conversations', value: 'C' },
-      { label: 'D. I\'m more of a listener than a speaker', value: 'D' },
+      { label: 'A. I enjoy public speaking and presenting', value: 'I enjoy public speaking and presenting' },
+      { label: 'B. I prefer writing reports or emails', value: 'I prefer writing reports or emails' },
+      { label: 'C. I like casual one-on-one conversations', value: 'I like casual one-on-one conversations' },
+      { label: 'D. I\'m more of a listener than a speaker', value: 'I\'m more of a listener than a speaker' },
     ],
   },
   {
     id: 2,
     question: 'How do you handle decision-making under pressure?',
     options: [
-      { label: 'A. I thrive under pressure and make quick decisions', value: 'A' },
-      { label: 'B. I prefer to analyze data before deciding', value: 'B' },
-      { label: 'C. I seek input from others before making decisions', value: 'C' },
-      { label: 'D. I avoid high-pressure situations', value: 'D' },
+      { label: 'A. I thrive under pressure and make quick decisions', value: 'I thrive under pressure and make quick decisions' },
+      { label: 'B. I prefer to analyze data before deciding', value: 'I prefer to analyze data before deciding' },
+      { label: 'C. I seek input from others before making decisions', value: 'I seek input from others before making decisions' },
+      { label: 'D. I avoid high-pressure situations', value: 'I avoid high-pressure situations' },
     ],
   },
   {
     id: 3,
     question: 'What role do you usually take in group settings?',
     options: [
-      { label: 'A. I lead and delegate tasks', value: 'A' },
-      { label: 'B. I organize and keep everyone on track', value: 'B' },
-      { label: 'C. I support and help where needed', value: 'C' },
-      { label: 'D. I prefer working alone', value: 'D' },
+      { label: 'A. I lead and delegate tasks', value: 'I lead and delegate tasks' },
+      { label: 'B. I organize and keep everyone on track', value: 'I organize and keep everyone on track' },
+      { label: 'C. I support and help where needed', value: 'I support and help where needed' },
+      { label: 'D. I prefer working alone', value: 'I prefer working alone' },
     ],
   },
   {
     id: 4,
     question: 'How comfortable are you with strategic planning?',
     options: [
-      { label: 'A. I often think long-term and plan ahead', value: 'A' },
-      { label: 'B. I can plan short-term, but not strategic goals', value: 'B' },
-      { label: 'C. I prefer when others handle strategy', value: 'C' },
-      { label: 'D. I focus on the now, not the future', value: 'D' },
+      { label: 'A. I often think long-term and plan ahead', value: 'I often think long-term and plan ahead' },
+      { label: 'B. I can plan short-term, but not strategic goals', value: 'I can plan short-term, but not strategic goals' },
+      { label: 'C. I prefer when others handle strategy', value: 'I prefer when others handle strategy' },
+      { label: 'D. I focus on the now, not the future', value: 'I focus on the now, not the future' },
     ],
   },
   {
     id: 5,
     question: 'What\'s your approach to solving complex problems?',
     options: [
-      { label: 'A. I break it into steps and analyze each one', value: 'A' },
-      { label: 'B. I brainstorm creatively for unique solutions', value: 'B' },
-      { label: 'C. I consult with others to find a path forward', value: 'C' },
-      { label: 'D. I usually avoid complex problems', value: 'D' },
+      { label: 'A. I break it into steps and analyze each one', value: 'I break it into steps and analyze each one'},
+      { label: 'B. I brainstorm creatively for unique solutions', value: 'I brainstorm creatively for unique solutions' },
+      { label: 'C. I consult with others to find a path forward', value: 'I consult with others to find a path forward' },
+      { label: 'D. I usually avoid complex problems', value: 'I usually avoid complex problems' },
     ],
   },
   {
     id: 6,
     question: 'Which work environment suits you best?',
     options: [
-      { label: 'A. Fast-paced and dynamic', value: 'A' },
-      { label: 'B. Structured and predictable', value: 'B' },
-      { label: 'C. Creative and open', value: 'C' },
-      { label: 'D. Independent and quiet', value: 'D' },
+      { label: 'A. Fast-paced and dynamic', value: 'Fast-paced and dynamic' },
+      { label: 'B. Structured and predictable', value: 'Structured and predictable' },
+      { label: 'C. Creative and open', value: 'Creative and open' },
+      { label: 'D. Independent and quiet', value: 'Independent and quiet' },
     ],
   },
   {
     id: 7,
     question: 'How do you feel about managing or leading others?',
     options: [
-      { label: 'A. I enjoy being in charge and mentoring others', value: 'A' },
-      { label: 'B. I can lead if needed, but don\'t seek it', value: 'B' },
-      { label: 'C. I prefer supporting roles', value: 'C' },
-      { label: 'D. I avoid leadership roles', value: 'D' },
+      { label: 'A. I enjoy being in charge and mentoring others', value: 'I enjoy being in charge and mentoring others' },
+      { label: 'B. I can lead if needed, but don\'t seek it', value: 'I can lead if needed, but don\'t seek it' },
+      { label: 'C. I prefer supporting roles', value: 'I prefer supporting roles' },
+      { label: 'D. I avoid leadership roles', value: 'I avoid leadership roles' },
     ],
   },
   {
     id: 8,
     question: 'Which of these best describes your time management?',
     options: [
-      { label: 'A. I\'m excellent at juggling multiple tasks', value: 'A' },
-      { label: 'B. I work best on one task at a time', value: 'B' },
-      { label: 'C. I often need help prioritizing', value: 'C' },
-      { label: 'D. I work best without strict deadlines', value: 'D' },
+      { label: 'A. I\'m excellent at juggling multiple tasks', value: 'I\'m excellent at juggling multiple tasks' },
+      { label: 'B. I work best on one task at a time', value: 'I work best on one task at a time' },
+      { label: 'C. I often need help prioritizing', value: 'I often need help prioritizing' },
+      { label: 'D. I work best without strict deadlines', value: 'I work best without strict deadlines' },
     ],
   },
   {
     id: 9,
     question: 'How do you prefer to handle interpersonal relationships at work?',
     options: [
-      { label: 'A. I enjoy networking and building connections', value: 'A' },
-      { label: 'B. I like working with a small, close-knit team', value: 'B' },
-      { label: 'C. I prefer minimal social interaction', value: 'C' },
-      { label: 'D. I work well with all types of people', value: 'D' },
+      { label: 'A. I enjoy networking and building connections', value: 'I enjoy networking and building connections' },
+      { label: 'B. I like working with a small, close-knit team', value: 'I like working with a small, close-knit team' },
+      { label: 'C. I prefer minimal social interaction', value: 'I prefer minimal social interaction' },
+      { label: 'D. I work well with all types of people', value: 'I work well with all types of people' },
     ],
   },
   {
     id: 10,
     question: 'What\'s your comfort level with making public decisions?',
     options: [
-      { label: 'A. Very comfortable — I can justify my decisions', value: 'A' },
-      { label: 'B. Somewhat comfortable — I prefer private settings', value: 'B' },
-      { label: 'C. I avoid decision-making roles', value: 'C' },
-      { label: 'D. I follow directions more than I lead', value: 'D' },
+      { label: 'A. Very comfortable — I can justify my decisions', value: 'Very comfortable — I can justify my decisions' },
+      { label: 'B. Somewhat comfortable — I prefer private settings', value: 'Somewhat comfortable — I prefer private settings' },
+      { label: 'C. I avoid decision-making roles', value: 'I avoid decision-making roles' },
+      { label: 'D. I follow directions more than I lead', value: 'I follow directions more than I lead' },
     ],
   },
   {
     id: 11,
     question: 'How do you feel about working with data and analytics?',
     options: [
-      { label: 'A. I love analyzing numbers and trends', value: 'A' },
-      { label: 'B. I can work with data, but prefer people-focused tasks', value: 'B' },
-      { label: 'C. I avoid data-heavy work', value: 'C' },
-      { label: 'D. I enjoy visualizing data for storytelling', value: 'D' },
+      { label: 'A. I love analyzing numbers and trends', value: 'I love analyzing numbers and trends' },
+      { label: 'B. I can work with data, but prefer people-focused tasks', value: 'I can work with data, but prefer people-focused tasks' },
+      { label: 'C. I avoid data-heavy work', value: 'I avoid data-heavy work' },
+      { label: 'D. I enjoy visualizing data for storytelling', value: 'I enjoy visualizing data for storytelling' },
     ],
   },
   {
     id: 12,
     question: 'Which skill comes most naturally to you?',
     options: [
-      { label: 'A. Persuasion and negotiation', value: 'A' },
-      { label: 'B. Critical thinking and analysis', value: 'B' },
-      { label: 'C. Empathy and understanding', value: 'C' },
-      { label: 'D. Creativity and innovation', value: 'D' },
+      { label: 'A. Persuasion and negotiation', value: 'Persuasion and negotiation' },
+      { label: 'B. Critical thinking and analysis', value: 'Critical thinking and analysis' },
+      { label: 'C. Empathy and understanding', value: 'Empathy and understanding' },
+      { label: 'D. Creativity and innovation', value: 'Creativity and innovation' },
     ],
   },
   {
     id: 13,
     question: 'How do you approach learning new information?',
     options: [
-      { label: 'A. I enjoy self-directed learning and growth', value: 'A' },
-      { label: 'B. I learn best through mentorship', value: 'B' },
-      { label: 'C. I prefer formal training programs', value: 'C' },
-      { label: 'D. I like learning through hands-on experiences', value: 'D' },
+      { label: 'A. I enjoy self-directed learning and growth', value: 'I enjoy self-directed learning and growth' },
+      { label: 'B. I learn best through mentorship', value: 'I learn best through mentorship' },
+      { label: 'C. I prefer formal training programs', value: 'I prefer formal training programs' },
+      { label: 'D. I like learning through hands-on experiences', value: 'I like learning through hands-on experiences' },
     ],
   },
   {
     id: 14,
     question: 'Which type of impact motivates you most?',
     options: [
-      { label: 'A. Influencing company strategy or growth', value: 'A' },
-      { label: 'B. Helping people directly', value: 'B' },
-      { label: 'C. Solving technical or operational problems', value: 'C' },
-      { label: 'D. Creating something meaningful or beautiful', value: 'D' },
+      { label: 'A. Influencing company strategy or growth', value: 'Influencing company strategy or growth' },
+      { label: 'B. Helping people directly', value: 'Helping people directly' },
+      { label: 'C. Solving technical or operational problems', value: 'Solving technical or operational problems' },
+      { label: 'D. Creating something meaningful or beautiful', value: 'Creating something meaningful or beautiful' },
     ],
   },
   {
     id: 15,
     question: 'What kind of feedback do you prefer?',
     options: [
-      { label: 'A. Direct and constructive', value: 'A' },
-      { label: 'B. Encouraging and supportive', value: 'B' },
-      { label: 'C. Formal performance reviews', value: 'C' },
-      { label: 'D. Minimal — I prefer working independently', value: 'D' },
+      { label: 'A. Direct and constructive', value: 'Direct and constructive' },
+      { label: 'B. Encouraging and supportive', value: 'Encouraging and supportive' },
+      { label: 'C. Formal performance reviews', value: 'Formal performance reviews' },
+      { label: 'D. Minimal — I prefer working independently', value: 'Minimal — I prefer working independently' },
     ],
   },
 ];
@@ -254,41 +254,62 @@ function Assessment({ setRecommendations }) {
   const handleSubmit = async () => {
     setIsSubmitting(true);
     try {
-      // Build a string from the answers - just the letter values (A, B, C, D)
+      // Build a string from the answers - all the values joined by commas
       const answersString = Object.entries(answers)
-        .map(([questionId, answer]) => answer)
-        .join(' ');
+        .sort(([a], [b]) => parseInt(a) - parseInt(b)) // Sort by question ID to maintain order
+        .map(([_, answer]) => answer)
+        .join(',');
 
       console.log('Answers string to send to backend:', answersString);
       
       // Send assessment data to backend
-      const response = await fetch('http://localhost:5000/api/recommend', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ answers: answersString })
+      console.log('Sending answers to backend:', answersString);
+      
+      console.log('Sending query to backend:', answersString);
+      
+      const response = await fetch(`http://localhost:5000/search?query=${encodeURIComponent(answersString)}`, {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json'
+        }
       });
       
+      console.log('Response status:', response.status);
+      
       if (!response.ok) {
-        throw new Error('Failed to get recommendations');
+        const errorText = await response.text();
+        console.error('Backend error:', errorText);
+        throw new Error(`Failed to get recommendations: ${errorText}`);
       }
       
       const data = await response.json();
-      
-      if (data.success && data.recommendations) {
-        // Extract career names from recommendations
-        const careerNames = data.recommendations.map(rec => rec.career_name);
-        setRecommendations(careerNames);
-        navigate('/results');
-      } else if (data.recommendations) {
-        // Handle case where success might not be in the response but recommendations are
-        const careerNames = data.recommendations.map(rec => rec.career_name);
-        setRecommendations(careerNames);
-        navigate('/results');
+      console.log('Backend response:', data);
+
+      if (data && Array.isArray(data)) {
+        // Extract the job titles from the response
+        const recommendations = data.map(item => item.job_title || item.text).filter(Boolean);
+        console.log('Setting recommendations:', recommendations);
+        
+        if (recommendations.length > 0) {
+          setRecommendations(recommendations);
+          navigate('/results');
+        } else {
+          throw new Error('No valid recommendations received');
+        }
       } else {
-        throw new Error('Invalid response from server');
+        console.error('Invalid response format:', data);
+        throw new Error('Invalid response format from server');
       }
     } catch (error) {
       console.error('Error getting recommendations:', error);
+      alert('There was an error connecting to the backend. Please check the console for more details.');
+      
+      // For debugging purposes, show the error in console
+      console.log('Full error details:', {
+        message: error.message,
+        stack: error.stack
+      });
+      
       // Fallback to mock data if backend is not available
       const mockRecommendations = [
         'Software Engineer',

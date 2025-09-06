@@ -1,0 +1,74 @@
+import React, { useState, useEffect } from 'react';
+import {
+  Container,
+  Box,
+  Typography,
+  Card,
+  CardContent,
+  Grid,
+  Chip,
+  Button,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Divider,
+  Rating,
+  LinearProgress,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  IconButton,
+  Tooltip,
+  CircularProgress,
+  useTheme,
+  alpha,
+  Avatar,
+  Fade,
+  Zoom,
+} from '@mui/material';
+import { styled } from '@mui/material/styles';
+import {
+  TrendingUp,
+  School,
+  Work,
+  LocationOn,
+  AttachMoney,
+  ExpandMore,
+  Compare,
+  Star,
+  Business,
+  Psychology,
+  CheckCircle,
+  ArrowBack,
+  SaveAlt,
+  Refresh,
+  EmojiEvents,
+  WorkOutline,
+  BarChart,
+  ThumbUp,
+  ThumbDown,
+} from '@mui/icons-material';
+import { useNavigate } from 'react-router-dom';
+
+// ... rest of the imports and careerData object ...
+
+function Results({ recommendations = [] }) {
+  const navigate = useNavigate();
+  const [selectedCareers, setSelectedCareers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [careerDataState, setCareerDataState] = useState({});
+
+  useEffect(() => {
+    // Initialize with the local career data
+    setCareerDataState(careerData);
+    setLoading(false);
+  }, []);
+
+  // ... rest of the component code ...
+}
+
+export default Results;

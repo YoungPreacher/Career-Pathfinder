@@ -285,20 +285,14 @@ function Assessment({ setRecommendations }) {
       const data = await response.json();
       console.log('Backend response:', data);
 
-      if (data && Array.isArray(data)) {
-        // Extract the job titles from the response
-        const recommendations = data.map(item => item.job_title || item.text).filter(Boolean);
-        console.log('Setting recommendations:', recommendations);
-        
-        if (recommendations.length > 0) {
-          setRecommendations(recommendations);
-          navigate('/results');
-        } else {
-          throw new Error('No valid recommendations received');
-        }
+      // Accept only non-empty arrays; otherwise treat as failure to ensure
+      // mock data is shown only when backend cannot be read/parsed.
+      if (Array.isArray(data) && data.length > 0) {
+        setRecommendations(data);
+        navigate('/results');
       } else {
-        console.error('Invalid response format:', data);
-        throw new Error('Invalid response format from server');
+        console.error('Invalid or empty response format:', data);
+        throw new Error('Invalid or empty response format from server');
       }
     } catch (error) {
       console.error('Error getting recommendations:', error);
@@ -311,9 +305,10 @@ function Assessment({ setRecommendations }) {
       });
       
       // Fallback to mock data if backend is not available
+      // Backend unavailable or invalid → show mock data and navigate
       const mockRecommendations = [
         'Software Engineer',
-        'Data Scientist', 
+        'Data Scientist',
         'Product Manager',
         'UX Designer',
         'Marketing Manager'

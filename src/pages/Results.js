@@ -35,20 +35,20 @@ import {
   School,
   LocationOn,
   AttachMoney,
-  ExpandMore,
-  Compare,
-  Business,
-  Psychology,
+  WorkOutline,
   CheckCircle,
-  SaveAlt,
   Refresh,
   EmojiEvents,
-  WorkOutline,
-  BarChart,
-  ThumbUp,
-  ThumbDown,
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
+import Compare from "@mui/icons-material/Compare";
+import ExpandMore from "@mui/icons-material/ExpandMore";
+import Psychology from "@mui/icons-material/Psychology";
+import Business from "@mui/icons-material/Business";
+import BarChart from "@mui/icons-material/BarChart";
+import ThumbUp from "@mui/icons-material/ThumbUp";
+import ThumbDown from "@mui/icons-material/ThumbDown";
+
 
 // Career data - will be fetched from backend
 let careerData = {
@@ -144,7 +144,7 @@ let careerData = {
   }
 };
 
-function Results({ recommendations = [] }) {
+function Results({ results = [] }) {
   const navigate = useNavigate();
 
   const [selectedCareers, setSelectedCareers] = useState([]);
@@ -180,6 +180,24 @@ function Results({ recommendations = [] }) {
     if (salary >= 60000) return '#ffc107';
     return '#ff9800';
   };
+
+  // Helper to safely get career details
+  const getCareerData = (career) => {
+    const data = careerDataState[career] || careerData[career];
+    return data || null;
+  };
+
+  // Build a safe list of careers to render
+  const defaultCareers = [
+    'Software Engineer',
+    'Data Scientist',
+    'Product Manager',
+    'UX Designer',
+    'Marketing Manager'
+  ];
+  const incoming = Array.isArray(results) ? results : [];
+  const baseCareers = incoming.length > 0 ? incoming : defaultCareers;
+  const careersToRender = baseCareers.filter((c) => !!getCareerData(c));
 
   // Custom styled components
   const StyledRating = styled(Rating)(({ theme }) => ({
@@ -360,21 +378,6 @@ function Results({ recommendations = [] }) {
           >
             Retake Assessment
           </Button>
-          <Button
-            variant="contained"
-            size="large"
-            startIcon={<SaveAlt />}
-            onClick={() => navigate('/dashboard')}
-            sx={{ 
-              borderRadius: '50px',
-              px: 3,
-              py: 1.2,
-              fontWeight: 600,
-              boxShadow: '0 4px 14px rgba(0,0,0,0.12)',
-            }}
-          >
-            Save to Dashboard
-          </Button>
         </Box>
       </Box>
 
@@ -404,16 +407,11 @@ function Results({ recommendations = [] }) {
       </Typography>
       
       <Grid container spacing={3} sx={{ mb: 5 }}>
-        {(recommendations.length > 0 ? recommendations : [
-          'Software Engineer',
-          'Data Scientist',
-          'Product Manager',
-          'UX Designer',
-          'Marketing Manager'
-        ]).map((career, index) => {
-          const data = careerDataState[career] || careerData[career];
+        {((Array.isArray(incoming) && incoming.length > 0) ? incoming : (Array.isArray(careersToRender) ? careersToRender : defaultCareers)).map((item, index) => {
+          const career = typeof item === 'string' ? item : (item.job_title || item.text || 'Result');
+          const description = typeof item === 'string' ? (getCareerData(item)?.description || '') : (item.text || '');
+          const data = getCareerData(career) || {};
           const isSelected = selectedCareers.includes(career);
-          
           return (
             <Grid item xs={12} md={6} lg={4} key={career}>
               <Zoom in={true} style={{ transitionDelay: `${index * 100}ms` }}>
@@ -481,8 +479,8 @@ function Results({ recommendations = [] }) {
                         {career}
                       </Typography>
                       <Chip 
-                        label={data.demand}
-                        color={data.demand === 'Very High' ? 'error' : data.demand === 'High' ? 'warning' : 'success'}
+                        label={data?.demand || 'Unknown'}
+                        color={data?.demand === 'Very High' ? 'error' : data?.demand === 'High' ? 'warning' : 'success'}
                         size="small"
                         sx={{ 
                           fontWeight: 500,
@@ -493,7 +491,7 @@ function Results({ recommendations = [] }) {
                     </Box>
                     
                     <Typography variant="body2" color="text.secondary" sx={{ mb: 3, minHeight: 60 }}>
-                      {data.description}
+                      {description || data?.description || 'No description available.'}
                     </Typography>
 
                     <Box 
@@ -510,18 +508,18 @@ function Results({ recommendations = [] }) {
                           sx={{ 
                             width: 36, 
                             height: 36, 
-                            backgroundColor: alpha(getSalaryColor(data.salary.average), 0.1),
+                            backgroundColor: alpha(getSalaryColor((data && data.salary && data.salary.average) ? data.salary.average : 0), 0.1),
                             mr: 1.5
                           }}
                         >
-                          <AttachMoney sx={{ color: getSalaryColor(data.salary.average) }} />
+                          <AttachMoney sx={{ color: getSalaryColor((data && data.salary && data.salary.average) ? data.salary.average : 0) }} />
                         </Avatar>
                         <Box>
                           <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.75rem' }}>
                             Average Salary
                           </Typography>
-                          <Typography variant="h6" sx={{ color: getSalaryColor(data.salary.average), fontWeight: 600 }}>
-                            {formatSalary(data.salary.average)}
+                          <Typography variant="h6" sx={{ color: getSalaryColor((data && data.salary && data.salary.average) ? data.salary.average : 0), fontWeight: 600 }}>
+                            {(data && data.salary && data.salary.average) ? formatSalary(data.salary.average) : 'N/A'}
                           </Typography>
                         </Box>
                       </Box>
@@ -542,9 +540,9 @@ function Results({ recommendations = [] }) {
                             Growth Potential
                           </Typography>
                           <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                            <StyledRating value={data.growth} readOnly size="small" precision={0.5} />
+                            <StyledRating value={(data && data.growth) ? data.growth : 0} readOnly size="small" precision={0.5} />
                             <Typography variant="body2" sx={{ ml: 1, fontWeight: 500 }}>
-                              {data.growth}/5
+                              {(data && data.growth) ? data.growth : 0}/5
                             </Typography>
                           </Box>
                         </Box>
@@ -555,7 +553,7 @@ function Results({ recommendations = [] }) {
                       Key Skills:
                     </Typography>
                     <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.8, mb: 3 }}>
-                      {data.skills.map((skill) => (
+                      {(data && Array.isArray(data.skills) ? data.skills : []).map((skill) => (
                         <Chip 
                           key={skill} 
                           label={skill} 
@@ -579,7 +577,7 @@ function Results({ recommendations = [] }) {
                       <Box sx={{ display: 'flex', alignItems: 'center' }}>
                         <WorkOutline sx={{ mr: 1, color: theme.palette.text.secondary, fontSize: 20 }} />
                         <Typography variant="body2" color="text.secondary">
-                          {data.workEnvironment}
+                          {(data && data.workEnvironment) ? data.workEnvironment : 'N/A'}
                         </Typography>
                       </Box>
                       <Tooltip 
@@ -589,7 +587,7 @@ function Results({ recommendations = [] }) {
                         TransitionComponent={Zoom}
                       >
                         <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                          <StyledRating value={data.workLifeBalance} readOnly size="small" precision={0.5} />
+                          <StyledRating value={(data && data.workLifeBalance) ? data.workLifeBalance : 0} readOnly size="small" precision={0.5} />
                         </Box>
                       </Tooltip>
                     </Box>
@@ -601,8 +599,8 @@ function Results({ recommendations = [] }) {
         })}
       </Grid>
 
-      {/* Comparison Section */}
-      {selectedCareers.length > 0 && (
+      {/* Comparison Section removed */}
+      {false && (
         <Fade in={true} timeout={800}>
           <Box sx={{ mt: 8 }}>
             <Box sx={{ 
@@ -659,7 +657,8 @@ function Results({ recommendations = [] }) {
                 </StyledTableHead>
                 <TableBody>
                   {selectedCareers.map((career) => {
-                    const data = careerDataState[career] || careerData[career];
+                    const data = getCareerData(career);
+                    if (!data) return null;
                     return (
                       <TableRow key={career} sx={{ '&:hover': { backgroundColor: alpha(theme.palette.primary.main, 0.02) } }}>
                         <StyledTableCell component="th" scope="row">
@@ -668,30 +667,30 @@ function Results({ recommendations = [] }) {
                           </Typography>
                         </StyledTableCell>
                         <StyledTableCell align="center">
-                          <Typography variant="h6" sx={{ color: getSalaryColor(data.salary.average), fontWeight: 600 }}>
-                            {formatSalary(data.salary.average)}
+                          <Typography variant="h6" sx={{ color: getSalaryColor((data && data.salary && data.salary.average) ? data.salary.average : 0), fontWeight: 600 }}>
+                            {(data && data.salary && data.salary.average) ? formatSalary(data.salary.average) : 'N/A'}
                           </Typography>
                         </StyledTableCell>
                         <StyledTableCell align="center">
                           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                            <StyledRating value={data.growth} readOnly precision={0.5} />
+                            <StyledRating value={(data && data.growth) ? data.growth : 0} readOnly precision={0.5} />
                             <Typography variant="body2" sx={{ ml: 1, fontWeight: 500 }}>
-                              {data.growth}/5
+                              {(data && data.growth) ? data.growth : 0}/5
                             </Typography>
                           </Box>
                         </StyledTableCell>
                         <StyledTableCell align="center">
                           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                            <StyledRating value={data.workLifeBalance} readOnly precision={0.5} />
+                            <StyledRating value={(data && data.workLifeBalance) ? data.workLifeBalance : 0} readOnly precision={0.5} />
                             <Typography variant="body2" sx={{ ml: 1, fontWeight: 500 }}>
-                              {data.workLifeBalance}/5
+                              {(data && data.workLifeBalance) ? data.workLifeBalance : 0}/5
                             </Typography>
                           </Box>
                         </StyledTableCell>
                         <StyledTableCell align="center">
                           <Chip 
-                            label={data.demand}
-                            color={data.demand === 'Very High' ? 'error' : data.demand === 'High' ? 'warning' : 'success'}
+                            label={(data && data.demand) ? data.demand : 'Unknown'}
+                            color={(data && data.demand === 'Very High') ? 'error' : (data && data.demand === 'High') ? 'warning' : 'success'}
                             size="small"
                             sx={{ 
                               fontWeight: 500,
@@ -704,7 +703,7 @@ function Results({ recommendations = [] }) {
                           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                             <School sx={{ mr: 1, color: theme.palette.primary.main, fontSize: 20 }} />
                             <Typography variant="body2" sx={{ fontWeight: 500 }}>
-                              {data.education}
+                              {(data && data.education) ? data.education : 'N/A'}
                             </Typography>
                           </Box>
                         </StyledTableCell>
@@ -729,7 +728,8 @@ function Results({ recommendations = [] }) {
           
           <Grid container spacing={3}>
             {selectedCareers.map((career) => {
-              const data = careerDataState[career] || careerData[career];
+              const data = getCareerData(career);
+              if (!data) return null;
               return (
                 <Grid item xs={12} md={6} key={career}>
                   <Card 
@@ -761,7 +761,7 @@ function Results({ recommendations = [] }) {
                         {career}
                       </Typography>
                       <Typography variant="body2" color="text.secondary">
-                        {data.description}
+                        {(data && data.description) ? data.description : 'No description available.'}
                       </Typography>
                     </Box>
                     
@@ -788,8 +788,8 @@ function Results({ recommendations = [] }) {
                               }}
                             >
                               <Typography fontWeight={500}>Entry Level:</Typography>
-                              <Typography sx={{ color: getSalaryColor(data.salary.entry), fontWeight: 600 }}>
-                                {formatSalary(data.salary.entry)}
+                              <Typography sx={{ color: getSalaryColor((data && data.salary && data.salary.entry) ? data.salary.entry : 0), fontWeight: 600 }}>
+                                {(data && data.salary && data.salary.entry) ? formatSalary(data.salary.entry) : 'N/A'}
                               </Typography>
                             </Box>
                             <Box 
@@ -802,8 +802,8 @@ function Results({ recommendations = [] }) {
                               }}
                             >
                               <Typography fontWeight={500}>Mid Level:</Typography>
-                              <Typography sx={{ color: getSalaryColor(data.salary.mid), fontWeight: 600 }}>
-                                {formatSalary(data.salary.mid)}
+                              <Typography sx={{ color: getSalaryColor((data && data.salary && data.salary.mid) ? data.salary.mid : 0), fontWeight: 600 }}>
+                                {(data && data.salary && data.salary.mid) ? formatSalary(data.salary.mid) : 'N/A'}
                               </Typography>
                             </Box>
                             <Box 
@@ -816,8 +816,8 @@ function Results({ recommendations = [] }) {
                               }}
                             >
                               <Typography fontWeight={500}>Senior Level:</Typography>
-                              <Typography sx={{ color: getSalaryColor(data.salary.senior), fontWeight: 600 }}>
-                                {formatSalary(data.salary.senior)}
+                              <Typography sx={{ color: getSalaryColor((data && data.salary && data.salary.senior) ? data.salary.senior : 0), fontWeight: 600 }}>
+                                {(data && data.salary && data.salary.senior) ? formatSalary(data.salary.senior) : 'N/A'}
                               </Typography>
                             </Box>
                           </Box>
@@ -840,7 +840,7 @@ function Results({ recommendations = [] }) {
                               Required Skills:
                             </Typography>
                             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.8, mb: 3 }}>
-                              {data.skills.map((skill) => (
+                              {(data && data.skills ? data.skills : []).map((skill) => (
                                 <Chip 
                                   key={skill} 
                                   label={skill} 
@@ -869,7 +869,7 @@ function Results({ recommendations = [] }) {
                             >
                               <School sx={{ mr: 1.5, color: theme.palette.primary.main }} />
                               <Typography variant="body2" fontWeight={500}>
-                                {data.education}
+                                {(data && data.education) ? data.education : 'N/A'}
                               </Typography>
                             </Box>
                             <Typography variant="subtitle2" fontWeight={600} gutterBottom color="primary.dark">
@@ -886,7 +886,7 @@ function Results({ recommendations = [] }) {
                             >
                               <Business sx={{ mr: 1.5, color: theme.palette.primary.main }} />
                               <Typography variant="body2" fontWeight={500}>
-                                {data.workEnvironment}
+                                {(data && data.workEnvironment) ? data.workEnvironment : 'N/A'}
                               </Typography>
                             </Box>
                           </Box>
@@ -997,7 +997,7 @@ function Results({ recommendations = [] }) {
                         </StyledAccordionSummary>
                         <AccordionDetails sx={{ px: 3, py: 2, backgroundColor: alpha(theme.palette.background.default, 0.5) }}>
                           <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.8 }}>
-                            {data.locations.map((location) => (
+                            {(data && data.locations ? data.locations : []).map((location) => (
                               <Chip 
                                 key={location} 
                                 label={location} 
@@ -1052,24 +1052,6 @@ function Results({ recommendations = [] }) {
           }
         </Typography>
         <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', justifyContent: 'center' }}>
-          <Button
-            variant="contained"
-            size="large"
-            onClick={() => navigate('/dashboard')}
-            startIcon={<SaveAlt />}
-            sx={{ 
-              borderRadius: '50px',
-              px: 4,
-              py: 1.5,
-              fontWeight: 600,
-              boxShadow: '0 8px 20px rgba(0,0,0,0.12)',
-              '&:hover': {
-                boxShadow: '0 12px 20px rgba(0,0,0,0.18)',
-              }
-            }}
-          >
-            Save Recommendations
-          </Button>
           <Button
             variant="outlined"
             size="large"

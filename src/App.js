@@ -3,13 +3,12 @@ import { Routes, Route } from 'react-router-dom';
 import { Box } from '@mui/material';
 import Navbar from './components/Navbar';
 import Home from './pages/Home';
-import Dashboard from './pages/Dashboard';
 import Assessment from './pages/Assessment';
 import Results from './pages/Results';
 import './App.css';
 
 function App() {
-  const [recommendations, setRecommendations] = useState([]);
+  const [results, setResults] = useState([]);
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
@@ -17,9 +16,8 @@ function App() {
       <Box component="main" sx={{ flexGrow: 1 }}>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/assessment" element={<Assessment setRecommendations={setRecommendations} />} />
-          <Route path="/results" element={<Results recommendations={recommendations} />} />
+          <Route path="/assessment" element={<Assessment setRecommendations={setResults} />} />
+          <Route path="/results" element={<Results results={results} />} />
         </Routes>
       </Box>
     </Box>

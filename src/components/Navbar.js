@@ -21,7 +21,7 @@ import ExploreIcon from '@mui/icons-material/Explore';
 import MenuIcon from '@mui/icons-material/Menu';
 import HomeIcon from '@mui/icons-material/Home';
 import AssessmentIcon from '@mui/icons-material/Assessment';
-import DashboardIcon from '@mui/icons-material/Dashboard';
+// Removed dashboard
 
 // Hide AppBar on scroll down
 function HideOnScroll(props) {
@@ -116,13 +116,7 @@ function Navbar() {
                     <AssessmentIcon sx={{ mr: 1.5 }} /> Assessment
                   </MenuItem>
                   <Divider />
-                  <MenuItem 
-                    onClick={() => handleNavigation('/dashboard')}
-                    selected={isActive('/dashboard')}
-                    sx={{ py: 1.5, color: theme.palette.secondary.main }}
-                  >
-                    <DashboardIcon sx={{ mr: 1.5 }} /> Dashboard
-                  </MenuItem>
+                  
                 </Menu>
               </>
             ) : (
@@ -167,26 +161,7 @@ function Navbar() {
                     Assessment
                   </Button>
                 </Tooltip>
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  component={Link}
-                  to="/dashboard"
-                  startIcon={<DashboardIcon />}
-                  sx={{
-                    ml: 1,
-                    color: 'white',
-                    fontWeight: 600,
-                    px: 3,
-                    py: 1,
-                    '&:hover': {
-                      backgroundColor: theme.palette.secondary.dark,
-                      transform: 'translateY(-2px)',
-                    },
-                  }}
-                >
-                  Dashboard
-                </Button>
+                
               </Box>
             )}
           </Toolbar>

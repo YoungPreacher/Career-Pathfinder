@@ -131,25 +131,7 @@ function Home() {
                   >
                     Get Started
                   </Button>
-                  <Button
-                    variant="outlined"
-                    size="large"
-                    onClick={() => navigate('/dashboard')}
-                    sx={{ 
-                      py: 1.5, 
-                      px: 4,
-                      color: 'white',
-                      borderColor: 'white',
-                      borderRadius: '50px',
-                      borderWidth: '2px',
-                      '&:hover': {
-                        borderColor: 'white',
-                        backgroundColor: 'rgba(255,255,255,0.1)',
-                      }
-                    }}
-                  >
-                    Dashboard
-                  </Button>
+                  
                 </Box>
               </Box>
             </Grid>
